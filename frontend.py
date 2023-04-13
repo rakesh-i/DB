@@ -642,20 +642,37 @@ class A(tk.Frame):
             self.sckn = sckn(tab5, "Stock", "CKN")
 
         if db == "Bills":
+            if hasattr(self, "psd"):
+                self.psd.destroy()
+            if hasattr(self, "sad"):
+                self.sad.destroy()
+            if hasattr(self, "gstapp"):
+                self.gstapp.destroy()
+            if hasattr(self, "cash"):
+                self.cash.destroy()
+
             t1 = tk.Frame(self.book)
             self.book.add(t1, text="PSdetails")
             self.psd = psd(t1, "Bills", "PSdetails")
+
             t2 = tk.Frame(self.book)
             self.book.add(t2, text="SalesDetail")
-            self.psd = sad(t2, "Bills", "Sdetails")
+            self.sad = sad(t2, "Bills", "Sdetails")
+            
             t3 = tk.Frame(self.book)
             self.book.add(t3, text="GSTAppear")
-            self.gstsad = gstapp(t3, "Bills", "GSTApp")
+            self.gstapp = gstapp(t3, "Bills", "GSTApp")
+            
             t4 = tk.Frame(self.book)
             self.book.add(t4, text='CashBill')
             self.cash = cash(t4, "Bills", "Cash")
         
         if db == "GST":
+            if hasattr(self, "gstpsd"):
+                self.gstpsd.destroy()
+            if hasattr(self, "gstsad"):
+                self.gstsad.destroy()
+
             ti1 = tk.Frame(self.book)
             self.book.add(ti1, text="Purchase")
             self.gstpsd = gstpsd(ti1, "GST", "Purchase")
