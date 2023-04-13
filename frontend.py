@@ -651,6 +651,9 @@ class A(tk.Frame):
             t3 = tk.Frame(self.book)
             self.book.add(t3, text="GSTAppear")
             self.gstsad = gstapp(t3, "Bills", "GSTApp")
+            t4 = tk.Frame(self.book)
+            self.book.add(t4, text='CashBill')
+            self.cash = cash(t4, "Bills", "Cash")
         
         if db == "GST":
             ti1 = tk.Frame(self.book)
@@ -5135,6 +5138,257 @@ class gstapp(tk.Frame):
         self.collection.delete_one({'Date':date})
         self.reset()
         self.showall()
+
+class cash(tk.Frame):
+    def __init__(self, parent, db, col):
+        super().__init__(parent)
+        self.db = client[db]
+        self.collection = self.db[col]
+        self.create_w(parent)
+
+    def create_w(self, parent):
+        self.tree = ttk.Treeview(parent)
+        self.tree['columns'] = ('SL.No', 'Date', 'Party', 'Rate', 'Qty', 'QtyType',
+                                'Total')
+        self.tree.column("SL.No", width=50, minwidth=25)
+        self.tree.column("Date", width=130, minwidth=25)
+        self.tree.column("Party", width=80, minwidth=25)
+        self.tree.column("Rate", width=80, minwidth=25)
+        self.tree.column("Qty", width=80, minwidth=25)
+        self.tree.column("QtyType", width=80, minwidth=25)
+        self.tree.column("Total", width=100, minwidth=25)
+        self.tree.column('#0',width=0, stretch=tk.NO )
+        self.tree.heading('SL.No', text='SL.NO', anchor=tk.CENTER)
+        self.tree.heading('Date', text='Date')
+        self.tree.heading('Party', text='Party')
+        self.tree.heading('Rate', text='Rate')
+        self.tree.heading('Qty', text='QTY')
+        self.tree.heading('QtyType', text='QTY Type')
+        self.tree.heading('Total', text='Total')
+        self.tree.place(x=0, rely=.46, relwidth=1, relheight=.55)
+        self.tree.bind("<Double-1>", self.click)
+        self.tree.update()
+
+        #label frames
+        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry.grid(row=0, column=0, sticky=tk.W)
+
+        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry.grid(row=0, column=1, sticky=tk.NW)
+
+        #labels
+        self.sl_label = tk.Label(self.data_Entry, text="Sl.NO:")
+        self.sl_label.grid(row=0, column=0, sticky=tk.W)
+
+        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label.grid(row=1, column=0, sticky=tk.W)
+        
+        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label.grid(row=2, column=0, sticky=tk.W)
+
+        self.r_label = tk.Label(self.data_Entry, text="Rate:")
+        self.r_label.grid(row=3, column=0, sticky=tk.W)
+
+        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label.grid(row=4, column=0, sticky=tk.W)
+
+        self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
+        self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
+
+        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label.grid(row=0, column= 4, sticky=tk.W)
+
+        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label.grid(row=0, column=6,sticky=tk.W)
+
+        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
+
+        #entry
+        self.sl_entry = tk.Entry(self.data_Entry)
+        self.sl_entry.grid(row=0, column=1, sticky=tk.W)
+
+        self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
+                            foreground='white', borderwidth=2,
+                            date_pattern='yyyy-mm-dd')
+        self.Date_entry.grid(row=1, column=1, sticky=tk.W)
+        
+        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry.grid(row=2, column=1, sticky=tk.W)
+
+        self.r_entry = tk.Entry(self.data_Entry)
+        self.r_entry.grid(row=3, column=1, sticky=tk.W)
+
+        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
+
+        self.qtyt_entry = tk.Entry(self.data_Entry)
+        self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
+
+        self.from_entry = DateEntry(self.range_entry, width=12, background='red',
+                            foreground='white', borderwidth=2,
+                            date_pattern='yyyy-mm-dd')
+        self.from_entry.grid(row=0, column=5, sticky=tk.W)
+
+        self.to_entry = DateEntry(self.range_entry, width=12, background='red',
+                            foreground='white', borderwidth=2,
+                            date_pattern='yyyy-mm-dd')
+        self.to_entry.grid(row=0, column=7, sticky=tk.W)
+
+        #buttons
+        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+
+        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+
+        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+
+        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+
+        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+
+        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.place(relx=.90)
+
+        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+
+    def save(self):
+        data = []
+        for item in self.tree.get_children():
+            values = self.tree.item(item)["values"]
+            data.append(values)
+        df = pd.DataFrame(data, columns=['SL.No', 'Date', 'Party', 'Rate', 'Qty', 'QtyType',
+                                'Total'])
+        filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
+        if filename:
+            df.to_excel(filename, index=False)
+
+    def showall(self):
+        self.tree.delete(*self.tree.get_children())
+        self.currnet_label.config(text="Showing All")
+        data = self.collection.find().sort("Sl",1)
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Sl'], i['Date'], i['Party'],i['Rate'], i['Qty'],
+                                    i['QtyType'], i['Total']))
+
+        pipeline = [{ "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
+                                            "totalR": { "$sum": "$Rate" }, 
+                                            "total":{"$sum":"$Total" }}}]
+        result = self.collection.aggregate(pipeline)
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['totalR'],
+                                        j['totalQty'], 0, j['total']), tags= 'total')
+        
+    def click(self, event):
+        item = self.tree.selection()[0]
+        values = self.tree.item(item, "values")
+        if(values):
+            self.sl_entry.delete(0, tk.END)
+            self.Date_entry.delete(0, tk.END)
+            self.p_entry.delete(0, tk.END)
+            self.r_entry.delete(0, tk.END)
+            self.Qty_entry.delete(0, tk.END)
+            self.qtyt_entry.delete(0, tk.END)
+            
+            self.sl_entry.insert(0, values[0])
+            self.Date_entry.insert(0, values[1])
+            self.p_entry.insert(0, values[2])
+            self.r_entry.insert(0, values[3])
+            self.Qty_entry.insert(0, values[4])
+            self.qtyt_entry.insert(0, values[5])
+
+    def add(self):
+        try:
+            sl = int(self.sl_entry.get())
+            datestr = self.Date_entry.get()
+            if len(datestr)<= 10:
+                datestr = datestr+" 00:00:00"
+            date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
+            r = float(self.r_entry.get())
+            qty = float(self.Qty_entry.get())
+            qtyt = self.qtyt_entry.get()
+            p = self.p_entry.get()
+
+            data = {'Sl':sl,'Date':date, 'Party': p, 'Rate':r,'Qty':qty, 'QtyType':qtyt }
+            
+            self.collection.insert_one(data)
+            self.collection.update_one({'Sl': sl},
+                                [{'$addFields': {'Total': {'$multiply': ['$Rate', '$Qty']}}}])
+            
+            self.reset()
+            self.showall()
+        except Exception as e:
+            messagebox.showerror('Error', e)
+    
+    def reset(self):
+        self.sl_entry.delete(0, tk.END)
+        self.p_entry.delete(0, tk.END)
+        self.r_entry.delete(0, tk.END)
+        self.Qty_entry.delete(0, tk.END)
+        self.qtyt_entry.delete(0, tk.END)
+            
+        self.sl_entry.insert(0, 0)
+        self.p_entry.insert(0, 0)
+        self.r_entry.insert(0, 0)
+        self.Qty_entry.insert(0, 0)
+        self.qtyt_entry.insert(0, 0)
+        
+    def range(self):
+        self.tree.delete(*self.tree.get_children())
+        fromdate = self.from_entry.get()
+        fromdate = fromdate+" 00:00:00"
+        todate = self.to_entry.get()
+        todate = todate+" 00:00:00"
+        fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
+        td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
+        data = self.collection.find({"Date":{'$gte':fd, '$lte':td}}).sort("Sl",1)
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"Date":{'$gte':fd, '$lte':td}}},\
+                    { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
+                                            "totalR": { "$sum": "$Rate" }, 
+                                            "total":{"$sum":"$Total" }}}]
+        result =  self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Sl'], i['Date'], i['Party'],i['Rate'], i['Qty'],
+                                    i['QtyType'], i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['totalR'],
+                                        j['totalQty'], 0, j['total']), tags= 'total')
+
+    def update(self):
+        sl = int(self.sl_entry.get())
+        datestr = self.Date_entry.get()
+        if len(datestr)<= 10:
+            datestr = datestr+" 00:00:00"
+        date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
+        r = float(self.r_entry.get())
+        qty = float(self.Qty_entry.get())
+        qtyt = self.qtyt_entry.get()
+        p = self.p_entry.get()
+        self.collection.update_one({"Sl": sl}, {'$set':{'Sl':sl,'Date':date, 
+                                            'Party': p, 'Rate':r,'Qty':qty, 'QtyType':qtyt }}) 
+        self.collection.update_one({'Sl': sl},
+                                [{'$addFields': {'Total': {'$multiply': ['$Rate', '$Qty']}}}])
+        self.showall()  
+
+    def delete(self):
+        sl = self.sl_entry.get()
+        self.collection.delete_one({'Sl':sl})
+        self.reset()
+        self.showall()
+
 
 class gstpsd(tk.Frame):
     def __init__(self, parent, db, col):
