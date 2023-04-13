@@ -5389,7 +5389,6 @@ class cash(tk.Frame):
         self.reset()
         self.showall()
 
-
 class gstpsd(tk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
