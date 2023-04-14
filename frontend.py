@@ -7,7 +7,7 @@ from tkcalendar import DateEntry
 import datetime
 import pandas as pd
 from tkinter import filedialog
-
+import os
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -65,6 +65,7 @@ class App(tk.Tk):
         self.title("Database")
         self.geometry('1000x600')
         self.minsize(1000,600)
+        os.popen("mongod")
         
         # Widgets
         if hasattr(self, 'sidebar'):
@@ -249,6 +250,7 @@ class Sidebar(tk.Frame):
         })
         col = db["CKDespatch"]
         col.create_index([('BillNo',1)], unique=True)
+
         db.create_collection('HDR', validator={
             "$jsonSchema": {
                 "bsonType": "object",
@@ -579,12 +581,27 @@ class A(tk.Frame):
         self.tab_list1.clear()
         otherthanA = ['Bills', 'Container','Stock', 'admin','config', 'local', 'GST' ]
         if db not in otherthanA:
-            for i in col:
-                tab = tk.Frame(self.book)
-                self.book.add(tab, text=i)
-                self.tab_list1.append(tab)
-            tab = tk.Frame(self.book)   
-            x = self.book.add(tab, text="Container")
+            # for i in col:
+            #     tab = tk.Frame(self.book)
+            #     self.book.add(tab, text=i)
+            #     self.tab_list1.append(tab)
+
+            tab1 = tk.Frame(self.book)
+            self.book.add(tab1, text="RCNutPurchase")
+            tab2 = tk.Frame(self.book)
+            self.book.add(tab2, text="CKDespatch")
+            tab3 = tk.Frame(self.book)
+            self.book.add(tab3, text="SDespatch")
+            tab4 = tk.Frame(self.book)
+            self.book.add(tab4, text="HDR")
+            tab5 = tk.Frame(self.book)
+            self.book.add(tab5, text="KernelList")
+            tab6 = tk.Frame(self.book)
+            self.book.add(tab6, text="JEChart")
+            tab7 = tk.Frame(self.book)   
+            x = self.book.add(tab7, text="Container")
+
+
             if hasattr(self, "rc"):
                 self.rc.destroy()
             if hasattr(self, "sdd"):
@@ -598,19 +615,13 @@ class A(tk.Frame):
             if hasattr(self, "ker"):
                 self.ker.destroy()
             
-               
-            rcnut = self.tab_list1[0]
-            self.rc = rcn(rcnut, db, "RCNutPurchase")
-            sdesp = self.tab_list1[1]
-            self.sdd = sdd(sdesp, db, "SDespatch")
-            ckdes = self.tab_list1[3]
-            self.ckn = ckn(ckdes, db, "CKDespatch")
-            hd = self.tab_list1[2]
-            self.hdr = hdr(hd, db, "HDR") 
-            jchart = self.tab_list1[5]
-            self.chart = chart(jchart, db, "JEChart")
-            kernel = self.tab_list1[4]
-            self.ker = ker(kernel, db, "KernelList")
+        
+            self.rc = rcn(tab1, db, "RCNutPurchase")
+            self.sdd = sdd(tab3, db, "SDespatch")
+            self.ckn = ckn(tab2, db, "CKDespatch")
+            self.hdr = hdr(tab4, db, "HDR") 
+            self.chart = chart(tab6, db, "JEChart")
+            self.ker = ker(tab5, db, "KernelList")
             #self.con = con(x, "Stock", "Container")
 
 
@@ -2193,7 +2204,9 @@ class hdr(tk.Frame):
             self.collection.update_one(filter={'Sl': sl},update=\
                                 [{'$addFields': {'Total': {'$add': ['$HuskAmt', '$DustAmt','$RejectionAmt', '$GbagAmt']}}}])
             
-            #self.reset()
+            print("Hello")
+            print(self.db, self.collection)
+            self.reset()
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
