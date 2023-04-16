@@ -6269,6 +6269,9 @@ class conw(tk.Frame):
         self.s_label = tk.Label(self.range_entry, text="Grade:")
         self.s_label.grid(row=0, column=0, sticky=tk.W)
 
+        self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
+        self.s_label.grid(row=1, column=0, sticky=tk.W)
+
         self.currnet_label = tk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
@@ -6309,6 +6312,9 @@ class conw(tk.Frame):
         self.findg_entry = tk.Entry(self.range_entry)
         self.findg_entry.grid(row=0, column=1)
 
+        self.findsg_entry = tk.Entry(self.range_entry)
+        self.findsg_entry.grid(row=1, column=1)
+
 
         #buttons
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
@@ -6334,6 +6340,9 @@ class conw(tk.Frame):
 
         self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
         self.findRange_button.grid(row=0, column=2, sticky=tk.NSEW)
+
+        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
 
         self.reset()
 
@@ -6420,7 +6429,6 @@ class conw(tk.Frame):
             self.t7_entry.insert(0, values[9])
             self.t_entry.insert(0, values[10])
 
-
     def add(self):
         try:
             i = self.i_entry.get()
@@ -6478,6 +6486,43 @@ class conw(tk.Frame):
         self.currnet_label.config(text="Showing Range")
 
         pipeline = [{"$match":{"Grade":g}},\
+                    { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
+                                                "total2": { "$sum": "$Trip2" },
+                                                "total3": { "$sum": "$Trip3" },
+                                                "total4":{"$sum":"$Trip4" },
+                                                "total5":{ "$sum": "$Trip5"}, 
+                                                "total6":{"$sum":"$Trip6"}, 
+                                                "total7":{"$sum":"$Trip7"},
+                                                "total":{"$sum":"$Total" }}}]
+        result =  self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['_id'],
+                                               i['Grade'], 
+                                               i['GradeD'],
+                                               i['Trip1'], 
+                                               i['Trip2'], 
+                                               i['Trip3'],
+                                               i['Trip4'], 
+                                               i['Trip5'], 
+                                               i['Trip6'], 
+                                               i['Trip7'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
+                                        j['total2'], j['total3'], j['total4'],
+                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+
+    def srange(self):
+        self.tree.delete(*self.tree.get_children())
+        g = self.findsg_entry.get()
+        data = self.collection.find({"GradeD":g}).sort("_id",1)
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"GradeD":g}},\
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6614,6 +6659,9 @@ class conp(tk.Frame):
         self.s_label = tk.Label(self.range_entry, text="Grade:")
         self.s_label.grid(row=0, column=0, sticky=tk.W)
 
+        self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
+        self.s_label.grid(row=1, column=0, sticky=tk.W)
+
         self.currnet_label = tk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
@@ -6654,6 +6702,9 @@ class conp(tk.Frame):
         self.findg_entry = tk.Entry(self.range_entry)
         self.findg_entry.grid(row=0, column=1)
 
+        self.findsg_entry = tk.Entry(self.range_entry)
+        self.findsg_entry.grid(row=1, column=1)
+
 
         #buttons
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
@@ -6679,6 +6730,9 @@ class conp(tk.Frame):
 
         self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
         self.findRange_button.grid(row=0, column=2, sticky=tk.NSEW)
+
+        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
 
         self.reset()
 
@@ -6814,14 +6868,51 @@ class conp(tk.Frame):
         self.t6_entry.insert(0, 0)
         self.t7_entry.insert(0, 0)
         self.t_entry.insert(0, 0)
-        
+
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        g = self.findg_entry.get()
-        data = self.collection.find({"Grade":g}).sort("_id",1)
+        g = self.findsg_entry.get()
+        data = self.collection.find({"GradeD":g}).sort("_id",1)
         self.currnet_label.config(text="Showing Range")
 
         pipeline = [{"$match":{"Grade":g}},\
+                    { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
+                                                "total2": { "$sum": "$Trip2" },
+                                                "total3": { "$sum": "$Trip3" },
+                                                "total4":{"$sum":"$Trip4" },
+                                                "total5":{ "$sum": "$Trip5"}, 
+                                                "total6":{"$sum":"$Trip6"}, 
+                                                "total7":{"$sum":"$Trip7"},
+                                                "total":{"$sum":"$Total" }}}]
+        result =  self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['_id'],
+                                               i['Grade'], 
+                                               i['GradeD'],
+                                               i['Trip1'], 
+                                               i['Trip2'], 
+                                               i['Trip3'],
+                                               i['Trip4'], 
+                                               i['Trip5'], 
+                                               i['Trip6'], 
+                                               i['Trip7'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
+                                        j['total2'], j['total3'], j['total4'],
+                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+
+    def ranges(self):
+        self.tree.delete(*self.tree.get_children())
+        g = self.findg_entry.get()
+        data = self.collection.find({"GradeD":g}).sort("_id",1)
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"GradeD":g}},\
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6875,6 +6966,7 @@ class conp(tk.Frame):
         self.collection.delete_one({'_id':ObjectId(i)})
         self.reset()
         self.showall()
+
 
 
 App()
