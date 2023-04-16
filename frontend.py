@@ -601,9 +601,6 @@ class A(tk.Frame):
             self.book.add(tab5, text="KernelList")
             tab6 = tk.Frame(self.book)
             self.book.add(tab6, text="JEChart")
-            tab7 = tk.Frame(self.book)   
-            x = self.book.add(tab7, text="Container")
-
 
             if hasattr(self, "rc"):
                 self.rc.destroy()
@@ -5805,7 +5802,7 @@ class gstpsd(tk.Frame):
         self.reset()
         self.showall()
 
-class gstsad(tk.Frame):
+class gstsad(tk.Frame): 
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
