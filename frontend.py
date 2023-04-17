@@ -63,7 +63,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         # Main Setup
-        self.title("Database")
+        self.title("Shri Shiddivinayaka Industries")
         self.geometry('1000x600')
         self.minsize(1000,600)
         os.popen("mongod")
@@ -88,7 +88,7 @@ class Sidebar(tk.Frame):
         self.main = Main(parent)    
 
     def create_w(self, frame):
-        self.currentdb=  tk.Label(frame, text="Current DB", font=('Calibri',25, 'bold'),bg='#F9FBFA')
+        self.currentdb=  tk.Label(frame, text="Welcome", font=('Calibri',25, 'bold'),bg='#F9FBFA')
         refresh = tk.Button(frame,text='Refresh', bg='#E8EAF6', command=self.add_data)
         delete = tk.Button(frame, text="Delete", bg='#E8EAF6',command=self.getval)
         add = tk.Button(frame, text="Add", bg='#E8EAF6', command=self.newdb)
