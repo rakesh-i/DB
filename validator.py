@@ -722,3 +722,187 @@ db.create_collection("Sales", validator={
 )
 col = db["Sales"]
 col.create_index([('Id',1)], unique=True)
+
+db = client["Container"]
+db.create_collection("Total", validator={
+      "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["Con", "Details"],
+        "properties": {
+          "Con": {
+            "bsonType": "int",
+            "description": "must be an integer and is required"
+          },
+          "Details": {
+            "bsonType": "string",
+            "description": "must be a string and is required"
+          }
+        }
+      }
+    }
+    )
+col = db["Total"]
+col.create_index(['Con', 1], unique=True)
+
+db.create_collection("Wholes", validator={
+      "$jsonSchema": {
+        "bsonType": "object",
+        "required": [
+          "Con",
+          "Grade",
+          "GradeD",
+          "Trip1",
+          "Trip2",
+          "Trip3",
+          "Trip4",
+          "Trip5",
+          "Trip6",
+          "Trip7",
+          "Total"
+        ],
+        "properties": {
+          "Con": {
+            "bsonType": "int"
+          },
+          "Grade": {
+            "bsonType": "string"
+          },
+          "GradeD": {
+            "bsonType": "string"
+          },
+          "Trip1": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip2": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip3": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip4": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip5": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip6": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip7": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Total": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          }
+        }
+      }
+    }
+    )
+col = db["Wholes"]
+col.create_index(['Con', 1], unique=True)
+
+db.create_collection("Pieces", validator={
+      "$jsonSchema": {
+        "bsonType": "object",
+        "required": [
+          "Con",
+          "Grade",
+          "GradeD",
+          "Trip1",
+          "Trip2",
+          "Trip3",
+          "Trip4",
+          "Trip5",
+          "Trip6",
+          "Trip7",
+          "Total"
+        ],
+        "properties": {
+          "Con": {
+            "bsonType": "int"
+          },
+          "Grade": {
+            "bsonType": "string"
+          },
+          "GradeD": {
+            "bsonType": "string"
+          },
+          "Trip1": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip2": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip3": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip4": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip5": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip6": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Trip7": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          },
+          "Total": {
+            "bsonType": [
+              "double",
+              "int"
+            ]
+          }
+        }
+      }
+    }
+    )
+col = db["Pieces"]
+col.create_index(['Con', 1], unique=True)
+

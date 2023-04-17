@@ -692,12 +692,21 @@ class A(tk.Frame):
             self.gstsad = gstsad(ti2, "GST", "Sales")
         
         if db == "Container":
+            if hasattr(self, "conw"):
+                self.conw.destroy()
+            if hasattr(self, "conp"):
+                self.conp.destroy()
+            if hasattr(self, "cont"):
+                self.cont.destroy()
             tj1 = tk.Frame(self.book)
             self.book.add(tj1, text="Wholes")
             self.conw = conw(tj1, "Container", "Wholes")
             tj2 = tk.Frame(self.book)
             self.book.add(tj2, text="Pieces")
-            self.conw = conp(tj2, "Container", "Pieces")
+            self.conp = conp(tj2, "Container", "Pieces")
+            tj3 = tk.Frame(self.book)
+            self.book.add(tj3, text="Total")
+            self.cont = cont(tj3, "Container", "Total")
 
 class rcn(tk.Frame):
     def __init__(self, parent, db, col):
@@ -7123,5 +7132,146 @@ class conp(tk.Frame):
         self.collection.delete_one({'Con':i})
         self.reset()
         self.showall()
+
+class cont(tk.Frame):
+    def __init__(self, parent, db, col):
+        super().__init__(parent)
+        self.db = client[db]
+        self.collection = self.db[col]
+        self.create_w(parent)
+
+    def create_w(self, parent):
+        self.tree = ttk.Treeview(parent)
+        self.tree['columns'] = ('Container')
+        self.tree.column("Container", width=50, minwidth=25)
+        self.tree.column('#0',width=0, stretch=tk.NO )
+        self.tree.heading('Container', text='Container', anchor=tk.CENTER)
+        self.tree.place(x=0, rely=.60, relwidth=1, relheight=.40)
+        self.tree.bind("<Double-1>", self.click)
+        self.tree.update()
+
+        #label frames
+        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry.grid(row=0, column=0, sticky=tk.W)
+
+        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry.grid(row=0, column=1, sticky=tk.NW)
+
+        self.text = tk.Text(self.data_Entry, height=15, width=60)
+        self.text.grid(row=1, column=1, sticky='nsew')
+
+        #labels
+        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
+        self.i_label.grid(row=0, column=0, sticky=tk.W)
+
+        self.i_label = tk.Label(self.data_Entry, text="Details:")
+        self.i_label.grid(row=1, column=0, sticky=tk.W)
+
+        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label.grid(row=0, column=0, sticky=tk.W)
+
+        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
+
+        #entry
+        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry.grid(row=0, column=1, sticky=tk.NSEW)
+        
+        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry.grid(row=0, column=1)
+
+        #buttons
+        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=3, column=0, sticky=tk.NSEW)
+
+        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
+
+        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=3, column=1, sticky=tk.NSEW)
+
+        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=3, column=2, sticky=tk.NSEW)
+
+        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=3, column=3, sticky=tk.NSEW)
+
+        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.place(relx=.90)
+
+        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
+
+        self.reset()
+
+    def showall(self):
+        self.tree.delete(*self.tree.get_children())
+        self.currnet_label.config(text="Showing All")
+        data = self.collection.find().sort("Con",1)
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Con']))
+
+    def click(self, event):
+        item = self.tree.selection()[0]
+        values = self.tree.item(item, "values")
+        if(values):
+            self.i_entry.delete(0, tk.END)
+            self.text.delete('1.0', tk.END)
+            
+            self.i_entry.insert(0, values[0])
+    
+            query = {'Con':int(values[0])}
+            projection = {"Details":1}
+            data = self.collection.find_one(query,projection )
+            self.text.insert("1.0", data['Details'])
+            
+    def add(self):
+        try:
+            i = int(self.i_entry.get())
+            t = self.text.get("1.0", tk.END)
+            data = {'Con': i,'Details':t}
+            
+            self.collection.insert_one(data)
+            
+            self.reset()
+            self.showall()
+        except Exception as e:
+            messagebox.showerror('Error', e)
+
+    def reset(self):
+        self.i_entry.delete(0, tk.END)
+        self.text.delete('1.0', tk.END)
+            
+        self.i_entry.insert(0, 0)
+
+    def find(self):
+        self.tree.delete(*self.tree.get_children())
+        i = int(self.con_entry.get())
+        data = self.collection.find({"Con":i})
+        self.currnet_label.config(text="Showing Range")
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Con']))
+
+    def update(self):
+        i = int(self.i_entry.get())
+        t = self.text.get("1.0", tk.END)
+        data = {"Details":t}
+            
+        self.collection.update_one({'Con':i}, {'$set':data})
+        
+        self.showall()  
+
+    def delete(self):
+        i = int(self.i_entry.get())
+        self.collection.delete_one({'Con':i})
+        self.reset()
+        self.showall()
+
+
 
 App()
