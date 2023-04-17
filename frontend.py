@@ -129,9 +129,9 @@ class Sidebar(tk.Frame):
     def update_s(self, event):
         x = self.winfo_width()
         if x==200:
-            self.search_entry.configure(width=18)
+            self.search_entry.configure(width=22)
         else:
-            self.search_entry.configure(width=int(20+x/28))
+            self.search_entry.configure(width=int(20+x/19))
     
     def add_data(self):
         self.dblist.delete(0, 'end')
@@ -697,7 +697,7 @@ class A(tk.Frame):
             self.conw = conw(tj1, "Container", "Wholes")
             tj2 = tk.Frame(self.book)
             self.book.add(tj2, text="Pieces")
-            self.conw = conw(tj2, "Container", "Pieces")
+            self.conw = conp(tj2, "Container", "Pieces")
 
 class rcn(tk.Frame):
     def __init__(self, parent, db, col):
@@ -5802,7 +5802,7 @@ class gstpsd(tk.Frame):
         self.reset()
         self.showall()
 
-class gstsad(tk.Frame): 
+class gstsad(tk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -6193,9 +6193,9 @@ class conw(tk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent)
-        self.tree['columns'] = ('Id', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',\
+        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7', 'Total')
-        self.tree.column("Id", width=50, minwidth=25)
+        self.tree.column("Container", width=50, minwidth=25)
         self.tree.column("Grade", width=130, minwidth=25)
         self.tree.column("GradeD", width=80, minwidth=25)
         self.tree.column("Trip1", width=80, minwidth=25)
@@ -6207,7 +6207,7 @@ class conw(tk.Frame):
         self.tree.column("Trip7", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
-        self.tree.heading('Id', text='Id', anchor=tk.CENTER)
+        self.tree.heading('Container', text='Container', anchor=tk.CENTER)
         self.tree.heading('Grade', text='Grade')
         self.tree.heading('GradeD', text='Subgrade')
         self.tree.heading('Trip1', text='Trip1')
@@ -6229,8 +6229,14 @@ class conw(tk.Frame):
         self.range_entry = tk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
+        self.tt = tk.LabelFrame(parent, text ="Trip Date details")
+        self.tt.grid(row=0, column=2, sticky='nw')
+
+        self.text = tk.Text(self.tt, height=10, width=40)
+        self.text.grid(row=0, column=0, sticky='nwew')
+
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="ID:")
+        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
         self.g_label = tk.Label(self.data_Entry, text="Grade:")
@@ -6263,11 +6269,14 @@ class conw(tk.Frame):
         self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=10, column=0, sticky=tk.W)
 
+        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label.grid(row=0, column=0, sticky=tk.W)
+
         self.s_label = tk.Label(self.range_entry, text="Grade:")
-        self.s_label.grid(row=0, column=0, sticky=tk.W)
+        self.s_label.grid(row=1, column=0, sticky=tk.W)
 
         self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
-        self.s_label.grid(row=1, column=0, sticky=tk.W)
+        self.s_label.grid(row=2, column=0, sticky=tk.W)
 
         self.currnet_label = tk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
@@ -6306,16 +6315,22 @@ class conw(tk.Frame):
         self.t_entry = tk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
         
+        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry.grid(row=0, column=1)
+        
         self.findg_entry = tk.Entry(self.range_entry)
-        self.findg_entry.grid(row=0, column=1)
+        self.findg_entry.grid(row=1, column=1)
 
         self.findsg_entry = tk.Entry(self.range_entry)
-        self.findsg_entry.grid(row=1, column=1)
+        self.findsg_entry.grid(row=2, column=1)
 
 
         #buttons
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
         self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+
+        self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
         self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
         self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
@@ -6335,11 +6350,14 @@ class conw(tk.Frame):
         self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
         self.reset_button.place(relx=.90)
 
+        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
+
         self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
-        self.findRange_button.grid(row=0, column=2, sticky=tk.NSEW)
+        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
 
         self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
-        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
+        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW)
 
         self.reset()
 
@@ -6359,7 +6377,8 @@ class conw(tk.Frame):
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['_id', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
+        
+        df = pd.DataFrame(data, columns=['Con', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7','Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
@@ -6368,11 +6387,11 @@ class conw(tk.Frame):
     def showall(self):
         self.tree.delete(*self.tree.get_children())
         self.currnet_label.config(text="Showing All")
-        data = self.collection.find().sort("_id",1)
+        data = self.collection.find().sort("Con",1)
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
 
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6413,6 +6432,7 @@ class conw(tk.Frame):
             self.t6_entry.delete(0, tk.END)
             self.t7_entry.delete(0, tk.END)
             self.t_entry.delete(0, tk.END)
+            self.text.delete('1.0', tk.END)
             
             self.i_entry.insert(0, values[0])
             self.g_entry.insert(0, values[1])
@@ -6426,9 +6446,14 @@ class conw(tk.Frame):
             self.t7_entry.insert(0, values[9])
             self.t_entry.insert(0, values[10])
 
+            query = {'Con':int(values[0])}
+            projection = {"Details":1}
+            data = self.collection.find_one(query,projection )
+            self.text.insert("1.0", data['Details'])
+            
     def add(self):
         try:
-            i = self.i_entry.get()
+            i = int(self.i_entry.get())
             g = self.g_entry.get()
             gd = self.gd_entry.get()
             t1 = float(self.t1_entry.get())
@@ -6439,7 +6464,7 @@ class conw(tk.Frame):
             t6 = float(self.t6_entry.get())
             t7 = float(self.t7_entry.get())
             t = float(self.t_entry.get())
-            data = {'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
                     'Total':t }
@@ -6450,7 +6475,21 @@ class conw(tk.Frame):
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
-    
+
+    def ad(self):
+        try:
+            i = int(self.i_entry.get())
+            t = self.text.get("1.0", tk.END)
+            data = {"Details":t}
+            
+            self.collection.update_one({'Con':i}, {'$set':data})
+            
+            self.reset()
+            self.showall()
+        except Exception as e:
+            messagebox.showerror('Error', e)
+
+
     def reset(self):
         self.i_entry.delete(0, tk.END)
         self.g_entry.delete(0, tk.END)
@@ -6463,6 +6502,7 @@ class conw(tk.Frame):
         self.t6_entry.delete(0, tk.END)
         self.t7_entry.delete(0, tk.END)
         self.t_entry.delete(0, tk.END)
+        self.text.delete('1.0', tk.END)
             
         self.i_entry.insert(0, 0)
         self.g_entry.insert(0, 0)
@@ -6476,13 +6516,14 @@ class conw(tk.Frame):
         self.t7_entry.insert(0, 0)
         self.t_entry.insert(0, 0)
         
-    def range(self):
+    def find(self):
         self.tree.delete(*self.tree.get_children())
+        i = int(self.con_entry.get())
         g = self.findg_entry.get()
-        data = self.collection.find({"Grade":g}).sort("_id",1)
+        data = self.collection.find({"Con":i})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"Grade":g}},\
+        pipeline = [{"$match":{"Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6496,7 +6537,45 @@ class conw(tk.Frame):
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
+                                               i['Grade'], 
+                                               i['GradeD'],
+                                               i['Trip1'], 
+                                               i['Trip2'], 
+                                               i['Trip3'],
+                                               i['Trip4'], 
+                                               i['Trip5'], 
+                                               i['Trip6'], 
+                                               i['Trip7'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=("Total",  0, 0, j['total1'],
+                                        j['total2'], j['total3'], j['total4'],
+                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+
+    def range(self):
+        self.tree.delete(*self.tree.get_children())
+        i = int(self.con_entry.get())
+        g = self.findg_entry.get()
+        data = self.collection.find({"Con":i, "Grade": g})
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"Grade":g ,"Con":i}},
+                    { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
+                                                "total2": { "$sum": "$Trip2" },
+                                                "total3": { "$sum": "$Trip3" },
+                                                "total4":{"$sum":"$Trip4" },
+                                                "total5":{ "$sum": "$Trip5"}, 
+                                                "total6":{"$sum":"$Trip6"}, 
+                                                "total7":{"$sum":"$Trip7"},
+                                                "total":{"$sum":"$Total" }}}]
+        result =  self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6515,11 +6594,12 @@ class conw(tk.Frame):
 
     def srange(self):
         self.tree.delete(*self.tree.get_children())
+        i = int(self.con_entry.get())
         g = self.findsg_entry.get()
-        data = self.collection.find({"GradeD":g}).sort("_id",1)
+        data = self.collection.find({"Con":i, "GradeD": g})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"GradeD":g}},\
+        pipeline = [{"$match":{"GradeD":g, "Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6533,7 +6613,7 @@ class conw(tk.Frame):
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6551,7 +6631,7 @@ class conw(tk.Frame):
                                         j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
 
     def update(self):
-        i = self.i_entry.get()
+        i = int(self.i_entry.get())
         g = self.g_entry.get()
         gd = self.gd_entry.get()
         t1 = float(self.t1_entry.get())
@@ -6562,15 +6642,15 @@ class conw(tk.Frame):
         t6 = float(self.t6_entry.get())
         t7 = float(self.t7_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"_id": ObjectId(i)}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+        self.collection.update_one({"Con":i}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
                     'Total':t }}) 
         self.showall()  
 
     def delete(self):
-        i = self.i_entry.get()
-        self.collection.delete_one({'_id':ObjectId(i)})
+        i = int(self.i_entry.get())
+        self.collection.delete_one({'Con':i})
         self.reset()
         self.showall()
 
@@ -6583,9 +6663,9 @@ class conp(tk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent)
-        self.tree['columns'] = ('Id', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
+        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7', 'Total')
-        self.tree.column("Id", width=50, minwidth=25)
+        self.tree.column("Container", width=50, minwidth=25)
         self.tree.column("Grade", width=130, minwidth=25)
         self.tree.column("GradeD", width=80, minwidth=25)
         self.tree.column("Trip1", width=80, minwidth=25)
@@ -6597,7 +6677,7 @@ class conp(tk.Frame):
         self.tree.column("Trip7", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
-        self.tree.heading('Id', text='Id', anchor=tk.CENTER)
+        self.tree.heading('Container', text='Container', anchor=tk.CENTER)
         self.tree.heading('Grade', text='Grade')
         self.tree.heading('GradeD', text='Subgrade')
         self.tree.heading('Trip1', text='Trip1')
@@ -6619,8 +6699,14 @@ class conp(tk.Frame):
         self.range_entry = tk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
+        self.tt = tk.LabelFrame(parent, text ="Trip Date details")
+        self.tt.grid(row=0, column=2, sticky='nw')
+
+        self.text = tk.Text(self.tt, height=10, width=40)
+        self.text.grid(row=0, column=0, sticky='nwew')
+
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="ID:")
+        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
         self.g_label = tk.Label(self.data_Entry, text="Grade:")
@@ -6653,11 +6739,14 @@ class conp(tk.Frame):
         self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=10, column=0, sticky=tk.W)
 
+        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label.grid(row=0, column=0, sticky=tk.W)
+
         self.s_label = tk.Label(self.range_entry, text="Grade:")
-        self.s_label.grid(row=0, column=0, sticky=tk.W)
+        self.s_label.grid(row=1, column=0, sticky=tk.W)
 
         self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
-        self.s_label.grid(row=1, column=0, sticky=tk.W)
+        self.s_label.grid(row=2, column=0, sticky=tk.W)
 
         self.currnet_label = tk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
@@ -6696,16 +6785,22 @@ class conp(tk.Frame):
         self.t_entry = tk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
         
+        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry.grid(row=0, column=1)
+        
         self.findg_entry = tk.Entry(self.range_entry)
-        self.findg_entry.grid(row=0, column=1)
+        self.findg_entry.grid(row=1, column=1)
 
         self.findsg_entry = tk.Entry(self.range_entry)
-        self.findsg_entry.grid(row=1, column=1)
+        self.findsg_entry.grid(row=2, column=1)
 
 
         #buttons
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
         self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+
+        self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
         self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
         self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
@@ -6725,20 +6820,35 @@ class conp(tk.Frame):
         self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
         self.reset_button.place(relx=.90)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
-        self.findRange_button.grid(row=0, column=2, sticky=tk.NSEW)
+        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
         self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
 
+        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW)
+
         self.reset()
+
+    def cal(self):
+        self.t_entry.delete(0, tk.END)
+        try:
+            amount = float(self.t1_entry.get())+float(self.t2_entry.get())+float(self.t3_entry.get())\
+                +float(self.t4_entry.get())+float(self.t5_entry.get())+float(self.t6_entry.get())\
+                +float(self.t7_entry.get())
+            self.t_entry.insert(0, amount)
+           
+        except Exception as e:
+            messagebox.showerror('Error', e)
 
     def save(self):
         data = []
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['_id', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
+        
+        df = pd.DataFrame(data, columns=['Con', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7','Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
@@ -6747,11 +6857,11 @@ class conp(tk.Frame):
     def showall(self):
         self.tree.delete(*self.tree.get_children())
         self.currnet_label.config(text="Showing All")
-        data = self.collection.find().sort("_id",1)
+        data = self.collection.find().sort("Con",1)
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
 
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6792,6 +6902,7 @@ class conp(tk.Frame):
             self.t6_entry.delete(0, tk.END)
             self.t7_entry.delete(0, tk.END)
             self.t_entry.delete(0, tk.END)
+            self.text.delete('1.0', tk.END)
             
             self.i_entry.insert(0, values[0])
             self.g_entry.insert(0, values[1])
@@ -6805,20 +6916,14 @@ class conp(tk.Frame):
             self.t7_entry.insert(0, values[9])
             self.t_entry.insert(0, values[10])
 
-    def cal(self):
-        self.t_entry.delete(0, tk.END)
-        try:
-            amount = float(self.t1_entry.get())+float(self.t2_entry.get())+float(self.t3_entry.get())\
-                +float(self.t4_entry.get())+float(self.t5_entry.get())+float(self.t6_entry.get())\
-                +float(self.t7_entry.get())
-            self.t_entry.insert(0, amount)
-           
-        except Exception as e:
-            messagebox.showerror('Error', e)
-
+            query = {'Con':int(values[0])}
+            projection = {"Details":1}
+            data = self.collection.find_one(query,projection )
+            self.text.insert("1.0", data['Details'])
+            
     def add(self):
         try:
-            i = self.i_entry.get()
+            i = int(self.i_entry.get())
             g = self.g_entry.get()
             gd = self.gd_entry.get()
             t1 = float(self.t1_entry.get())
@@ -6829,7 +6934,7 @@ class conp(tk.Frame):
             t6 = float(self.t6_entry.get())
             t7 = float(self.t7_entry.get())
             t = float(self.t_entry.get())
-            data = { 'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
                     'Total':t }
@@ -6840,7 +6945,21 @@ class conp(tk.Frame):
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
-    
+
+    def ad(self):
+        try:
+            i = int(self.i_entry.get())
+            t = self.text.get("1.0", tk.END)
+            data = {"Details":t}
+            
+            self.collection.update_one({'Con':i}, {'$set':data})
+            
+            self.reset()
+            self.showall()
+        except Exception as e:
+            messagebox.showerror('Error', e)
+
+
     def reset(self):
         self.i_entry.delete(0, tk.END)
         self.g_entry.delete(0, tk.END)
@@ -6853,6 +6972,7 @@ class conp(tk.Frame):
         self.t6_entry.delete(0, tk.END)
         self.t7_entry.delete(0, tk.END)
         self.t_entry.delete(0, tk.END)
+        self.text.delete('1.0', tk.END)
             
         self.i_entry.insert(0, 0)
         self.g_entry.insert(0, 0)
@@ -6865,14 +6985,15 @@ class conp(tk.Frame):
         self.t6_entry.insert(0, 0)
         self.t7_entry.insert(0, 0)
         self.t_entry.insert(0, 0)
-
-    def range(self):
+        
+    def find(self):
         self.tree.delete(*self.tree.get_children())
-        g = self.findsg_entry.get()
-        data = self.collection.find({"GradeD":g}).sort("_id",1)
+        i = int(self.con_entry.get())
+        g = self.findg_entry.get()
+        data = self.collection.find({"Con":i})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"Grade":g}},\
+        pipeline = [{"$match":{"Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6886,7 +7007,45 @@ class conp(tk.Frame):
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
+                                               i['Grade'], 
+                                               i['GradeD'],
+                                               i['Trip1'], 
+                                               i['Trip2'], 
+                                               i['Trip3'],
+                                               i['Trip4'], 
+                                               i['Trip5'], 
+                                               i['Trip6'], 
+                                               i['Trip7'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=("Total",  0, 0, j['total1'],
+                                        j['total2'], j['total3'], j['total4'],
+                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+
+    def range(self):
+        self.tree.delete(*self.tree.get_children())
+        i = int(self.con_entry.get())
+        g = self.findg_entry.get()
+        data = self.collection.find({"Con":i, "Grade": g})
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"Grade":g ,"Con":i}},
+                    { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
+                                                "total2": { "$sum": "$Trip2" },
+                                                "total3": { "$sum": "$Trip3" },
+                                                "total4":{"$sum":"$Trip4" },
+                                                "total5":{ "$sum": "$Trip5"}, 
+                                                "total6":{"$sum":"$Trip6"}, 
+                                                "total7":{"$sum":"$Trip7"},
+                                                "total":{"$sum":"$Total" }}}]
+        result =  self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6903,13 +7062,14 @@ class conp(tk.Frame):
                                         j['total2'], j['total3'], j['total4'],
                                         j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
 
-    def ranges(self):
+    def srange(self):
         self.tree.delete(*self.tree.get_children())
-        g = self.findg_entry.get()
-        data = self.collection.find({"GradeD":g}).sort("_id",1)
+        i = int(self.con_entry.get())
+        g = self.findsg_entry.get()
+        data = self.collection.find({"Con":i, "GradeD": g})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"GradeD":g}},\
+        pipeline = [{"$match":{"GradeD":g, "Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6923,7 +7083,7 @@ class conp(tk.Frame):
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
         for i in data:
-            self.tree.insert('', 'end',values=(i['_id'],
+            self.tree.insert('', 'end',values=(i['Con'],
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
@@ -6941,7 +7101,7 @@ class conp(tk.Frame):
                                         j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
 
     def update(self):
-        i = self.i_entry.get()
+        i = int(self.i_entry.get())
         g = self.g_entry.get()
         gd = self.gd_entry.get()
         t1 = float(self.t1_entry.get())
@@ -6952,18 +7112,16 @@ class conp(tk.Frame):
         t6 = float(self.t6_entry.get())
         t7 = float(self.t7_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"_id": ObjectId(i)}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+        self.collection.update_one({"Con":i}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
                     'Total':t }}) 
         self.showall()  
 
     def delete(self):
-        i = self.i_entry.get()
-        self.collection.delete_one({'_id':ObjectId(i)})
+        i = int(self.i_entry.get())
+        self.collection.delete_one({'Con':i})
         self.reset()
         self.showall()
-
-
 
 App()
