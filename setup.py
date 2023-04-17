@@ -6,7 +6,7 @@ exe = Executable(
 )
 
 setup(
-    name="Database",
+    name="Shri Shiddivinayaka Industries",
     version="0.1",
     description="first",
     executables=[exe]
