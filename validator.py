@@ -752,7 +752,7 @@ db.create_collection("Total", validator={
     }
     )
 col = db["Total"]
-col.create_index(['Con', 1], unique=True)
+col.create_index([('Con', 1)], unique=True)
 
 db.create_collection("Wholes", validator={
       "$jsonSchema": {
@@ -768,7 +768,8 @@ db.create_collection("Wholes", validator={
           "Trip5",
           "Trip6",
           "Trip7",
-          "Total"
+          "Total", 
+          "Details"
         ],
         "properties": {
           "Con": {
@@ -827,13 +828,16 @@ db.create_collection("Wholes", validator={
               "double",
               "int"
             ]
+          },
+          "Details": {
+            "bsonType": "string"
           }
         }
       }
     }
     )
 col = db["Wholes"]
-col.create_index(['Con', 1], unique=True)
+col.create_index([('GradeD', 1)], unique=True)
 
 db.create_collection("Pieces", validator={
       "$jsonSchema": {
@@ -849,7 +853,8 @@ db.create_collection("Pieces", validator={
           "Trip5",
           "Trip6",
           "Trip7",
-          "Total"
+          "Total", 
+          "Details"
         ],
         "properties": {
           "Con": {
@@ -908,11 +913,14 @@ db.create_collection("Pieces", validator={
               "double",
               "int"
             ]
+          },
+          "Details": {
+            "bsonType": "string"
           }
         }
       }
     }
     )
 col = db["Pieces"]
-col.create_index(['Con', 1], unique=True)
+col.create_index([('GradeD', 1)], unique=True)
 
