@@ -408,6 +408,7 @@ db.create_collection('PSdetails', validator={
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
+      "Id",
       "Date",
       "Party",
       "INVNo",
@@ -419,6 +420,10 @@ db.create_collection('PSdetails', validator={
       "IGST"
     ],
     "properties": {
+      "Id": {
+        "bsonType": "int",
+        "description": "Date of transaction"
+      },
       "Date": {
         "bsonType": "date",
         "description": "Date of transaction"
@@ -475,12 +480,13 @@ db.create_collection('PSdetails', validator={
 }
 )
 col = db["PSdetails"]
-col.create_index([('Date',1)], unique=True)
+col.create_index([('Id',1)], unique=True)
 
 db.create_collection('Sdetails', validator={
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
+      "Id",
       "Date",
       "Party",
       "INVNo",
@@ -492,6 +498,10 @@ db.create_collection('Sdetails', validator={
       "IGST"
     ],
     "properties": {
+      "Id": {
+        "bsonType": "int",
+        "description": "Date of transaction"
+      },
       "Date": {
         "bsonType": "date",
         "description": "Date of transaction"
@@ -548,7 +558,7 @@ db.create_collection('Sdetails', validator={
 }
 )
 col = db["Sdetails"]
-col.create_index([('Date',1)], unique=True)
+col.create_index([('Id',1)], unique=True)
 
 db = client['GST']
 db.create_collection("Purchase", validator={
