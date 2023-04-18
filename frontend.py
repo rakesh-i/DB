@@ -6601,11 +6601,12 @@ class conw(tk.Frame):
     def srange(self):
         self.tree.delete(*self.tree.get_children())
         i = int(self.con_entry.get())
-        g = self.findsg_entry.get()
-        data = self.collection.find({"Con":i, "GradeD": g})
+        gd = self.findsg_entry.get()
+        g = self.findg_entry.get()
+        data = self.collection.find({"Con":i, 'Grade':g, "GradeD": gd})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"GradeD":g, "Con":i}},
+        pipeline = [{"$match":{"GradeD":gd, 'Grade':g, "Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -6650,14 +6651,16 @@ class conw(tk.Frame):
         t = float(self.t_entry.get())
 
         tt = self.text.get("1.0", tk.END)
-        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+        self.collection.update_one({"GradeD":gd, 'Con':i, 'Grade':g}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
                     'Total':t , 'Details':tt}})  
-
+        self.showall()
     def delete(self):
+        i = int(self.i_entry.get())
+        g = self.g_entry.get()
         gd = self.gd_entry.get()
-        self.collection.delete_one({'GradeD':gd})
+        self.collection.delete_one({'Con':i,'Grade':g, 'GradeD':gd})
         self.reset()
         self.showall()
 
@@ -7074,11 +7077,12 @@ class conp(tk.Frame):
     def srange(self):
         self.tree.delete(*self.tree.get_children())
         i = int(self.con_entry.get())
-        g = self.findsg_entry.get()
-        data = self.collection.find({"Con":i, "GradeD": g})
+        gd = self.findsg_entry.get()
+        g = self.findg_entry.get()
+        data = self.collection.find({"Con":i, 'Grade':g, "GradeD": gd})
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"GradeD":g, "Con":i}},
+        pipeline = [{"$match":{"GradeD":gd, 'Grade':g, "Con":i}},
                     { "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
                                                 "total2": { "$sum": "$Trip2" },
                                                 "total3": { "$sum": "$Trip3" },
@@ -7123,16 +7127,21 @@ class conp(tk.Frame):
         t = float(self.t_entry.get())
 
         tt = self.text.get("1.0", tk.END)
-        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+        self.collection.update_one({"GradeD":gd, 'Con':i, 'Grade':g}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t , 'Details':tt}}) 
+                    'Total':t , 'Details':tt}})  
+        self.showall()
 
     def delete(self):
         gd = self.gd_entry.get()
-        self.collection.delete_one({'GradeD':gd})
+        g = self.g_entry.get()
+        i = int(self.i_entry.get())
+        self.collection.delete_one({'GradeD':gd, 'Grade':g, 'Con':i})
         self.reset()
         self.showall()
+
+
 
 class cont(tk.Frame):
     def __init__(self, parent, db, col):
