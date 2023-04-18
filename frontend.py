@@ -757,9 +757,6 @@ class rcn(tk.Frame):
         self.range_entry = tk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.Buttons_entry = tk.LabelFrame(parent)
-        self.Buttons_entry.grid(row=4, column=0, sticky=tk.W)
-
         #labels
         self.BillNo_label = tk.Label(self.data_Entry, text="BillNO:")
         self.BillNo_label.grid(row=0, column=0, sticky=tk.W)
@@ -855,20 +852,20 @@ class rcn(tk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.Buttons_entry, text="Add", command=self.add)
-        self.add_button.grid(row=0, column=0, sticky=tk.W)
+        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=10, column=0, sticky=tk.NSEW)
 
-        self.update_button = tk.Button(self.Buttons_entry, text="Update", command=self.update)
-        self.update_button.grid(row=0, column=1, sticky=tk.W)
+        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=10, column=1, sticky=tk.NSEW)
 
-        self.delete_button = tk.Button(self.Buttons_entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=0, column=2, sticky=tk.W)
+        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=10, column=2, sticky=tk.NSEW)
 
-        self.show_button = tk.Button(self.Buttons_entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=0, column=3, sticky=tk.W)
+        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=10, column=3, sticky=tk.NSEW)
 
         self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=6, column=3, sticky=tk.W)
+        self.calAmt_button.grid(row=6, column=3, sticky=tk.NSEW)
 
         self.reset_button = tk.Button(parent, text="Reset", command=self.reset)
         self.reset_button.place(relx=.90)
@@ -876,8 +873,8 @@ class rcn(tk.Frame):
         self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
         self.findRange_button.grid(row=1, column=4, sticky=tk.W)
         
-        self.reset_button = tk.Button(self.Buttons_entry, text="Export", command=self.save)
-        self.reset_button.grid(column=4, row=0)
+        self.reset_button = tk.Button(self.data_Entry, text="Export", command=self.save)
+        self.reset_button.grid(column=4, row=10, sticky=tk.NSEW)
 
     def showall(self):
         self.tree.delete(*self.tree.get_children())
@@ -976,7 +973,6 @@ class rcn(tk.Frame):
     
     def reset(self):
         self.BillNo_entry.delete(0, tk.END)
-        self.Date_entry.delete(0, tk.END)
         self.Rate_entry.delete(0, tk.END)
         self.Bags_entry.delete(0, tk.END)
         self.Quintal_entry.delete(0, tk.END)
@@ -1329,7 +1325,6 @@ class ckn(tk.Frame):
     
     def reset(self):
         self.BillNo_entry.delete(0, tk.END)
-        self.Date_entry.delete(0, tk.END)
         self.Qty_entry.delete(0, tk.END)
         self.WRate_entry.delete(0, tk.END)
         self.Wholes_entry.delete(0, tk.END)
@@ -1474,9 +1469,6 @@ class sdd(tk.Frame):
         self.range_entry = tk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.Buttons_entry = tk.LabelFrame(parent)
-        self.Buttons_entry.grid(row=10, column=0, sticky=tk.W)
-
         #labels
         self.BillNo_label = tk.Label(self.data_Entry, text="BillNO:")
         self.BillNo_label.grid(row=0, column=0, sticky=tk.W)
@@ -1572,32 +1564,32 @@ class sdd(tk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         # #buttons
-        self.add_button = tk.Button(self.Buttons_entry, text="Add", command=self.add)
-        self.add_button.grid(row=0, column=0, sticky=tk.W)
+        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=10, column=0, sticky=tk.NSEW)
 
-        self.update_button = tk.Button(self.Buttons_entry, text="Update", command=self.update)
-        self.update_button.grid(row=0, column=1, sticky=tk.W)
+        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=10, column=1, sticky=tk.NSEW)
 
-        self.delete_button = tk.Button(self.Buttons_entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=0, column=2, sticky=tk.W)
+        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=10, column=2, sticky=tk.NSEW)
 
-        self.show_button = tk.Button(self.Buttons_entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=0, column=3, sticky=tk.W)
+        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=10, column=3, sticky=tk.NSEW)
 
         self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=5, column=3, sticky=tk.W)
+        self.calAmt_button.grid(row=5, column=3, sticky=tk.NSEW)
 
         self.reset_button = tk.Button(parent, text="Reset", command=self.reset)
         self.reset_button.place(relx=.90)
 
         self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
 
         self.showex_button = tk.Button(parent, text="Show Excess-Less table", command=self.exls)
         self.showex_button.place(relx=.8, rely=.2)
 
-        self.reset_button = tk.Button(self.Buttons_entry, text="Export", command=self.save1)
-        self.reset_button.grid(column=4, row=0)
+        self.reset_button = tk.Button(self.data_Entry, text="Export", command=self.save1)
+        self.reset_button.grid(column=4, row=10, sticky=tk.NSEW)
 
     def save1(self):
         data = []
@@ -1831,7 +1823,6 @@ class sdd(tk.Frame):
     
     def reset(self):
         self.BillNo_entry.delete(0, tk.END)
-        self.Date_entry.delete(0, tk.END)
         self.Rate_entry.delete(0, tk.END)
         self.Bags_entry.delete(0, tk.END)
         self.KGs_entry.delete(0, tk.END)
@@ -2246,7 +2237,6 @@ class hdr(tk.Frame):
     
     def reset(self):
         self.sl_entry.delete(0, tk.END)
-        self.Date_entry.delete(0, tk.END)
         self.HRate_entry.delete(0, tk.END)
         self.Husk_entry.delete(0, tk.END)
         self.HuskAmt_entry.delete(0, tk.END)
@@ -2565,7 +2555,6 @@ class chart(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.monthyear.delete()
         self.Sales_entry.delete(0, tk.END)
         self.Payment_entry.delete(0, tk.END)
         self.tcs_entry.delete(0, tk.END)
@@ -3118,7 +3107,6 @@ class ss(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.Date_entry.delete(0, tk.END)
         self.bill_entry.delete(0, tk.END)
         self.husk_entry.delete(0, tk.END)
         self.dust_entry.delete(0, tk.END)
@@ -3403,7 +3391,6 @@ class ps(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.Date_entry.delete(0, tk.END)
         self.bill_entry.delete(0, tk.END)
         self.husk_entry.delete(0, tk.END)
         self.dust_entry.delete(0, tk.END)
@@ -3633,12 +3620,10 @@ class pa(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.Date_entry.delete(0, tk.END)
         self.lot_entry.delete(0, tk.END)
         self.ros_entry.delete(0, tk.END)
             
         self.lot_entry.insert(0, 0)
-        self.Date_entry.insert(0, 0)
         self.ros_entry.insert(0, 0)
         
     def range(self):
@@ -3884,14 +3869,12 @@ class srcn(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.Date_entry.delete(0, tk.END)
         self.osb_entry.delete(0, tk.END)
         self.pu_entry.delete(0, tk.END)
         self.s_entry.delete(0, tk.END)
         self.pr_entry.delete(0, tk.END)
         self.css_entry.delete(0, tk.END)
             
-        self.Date_entry.insert(0, 0)
         self.osb_entry.insert(0, 0)
         self.pu_entry.insert(0, 0)
         self.s_entry.insert(0, 0)
@@ -4155,14 +4138,12 @@ class sckn(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
-        self.Date_entry.delete(0, tk.END)
         self.osb_entry.delete(0, tk.END)
         self.pu_entry.delete(0, tk.END)
         self.s_entry.delete(0, tk.END)
         self.pr_entry.delete(0, tk.END)
         self.css_entry.delete(0, tk.END)
             
-        self.Date_entry.insert(0, 0)
         self.osb_entry.insert(0, 0)
         self.pu_entry.insert(0, 0)
         self.s_entry.insert(0, 0)
@@ -4238,9 +4219,9 @@ class psd(tk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent)
-        self.tree['columns'] = ('SL.No', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
+        self.tree['columns'] = ('Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total')
-        self.tree.column("SL.No", width=50, minwidth=25)
+        self.tree.column("Id", width=50, minwidth=25)
         self.tree.column("Date", width=130, minwidth=25)
         self.tree.column("Party", width=80, minwidth=25)
         self.tree.column("INVNo", width=80, minwidth=25)
@@ -4252,7 +4233,7 @@ class psd(tk.Frame):
         self.tree.column("IGST", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
-        self.tree.heading('SL.No', text='SL.NO', anchor=tk.CENTER)
+        self.tree.heading('Id', text='Id', anchor=tk.CENTER)
         self.tree.heading('Date', text='Date')
         self.tree.heading('Party', text='Party')
         self.tree.heading('INVNo', text='INV.NO')
@@ -4275,32 +4256,35 @@ class psd(tk.Frame):
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
+        self.id_label = tk.Label(self.data_Entry, text="Id:")
+        self.id_label.grid(row=0, column=0, sticky=tk.W)
+
         self.Date_label = tk.Label(self.data_Entry, text="Date:")
-        self.Date_label.grid(row=0, column=0, sticky=tk.W)
+        self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
         self.p_label = tk.Label(self.data_Entry, text="Party:")
-        self.p_label.grid(row=1, column=0, sticky=tk.W)
+        self.p_label.grid(row=2, column=0, sticky=tk.W)
 
         self.inv_label = tk.Label(self.data_Entry, text="INV.NO:")
-        self.inv_label.grid(row=2, column=0, sticky=tk.W)
+        self.inv_label.grid(row=3, column=0, sticky=tk.W)
 
         self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
-        self.Qty_label.grid(row=3, column=0, sticky=tk.W)
+        self.Qty_label.grid(row=4, column=0, sticky=tk.W)
 
         self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
-        self.qtyt_label.grid(row=4, column=0, sticky=tk.W)
+        self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
 
         self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
-        self.amount_label.grid(row=5,column=0, sticky=tk.W)
+        self.amount_label.grid(row=6,column=0, sticky=tk.W)
 
         self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
-        self.SGST_label.grid(row=6, column=0, sticky=tk.W)
+        self.SGST_label.grid(row=7, column=0, sticky=tk.W)
 
         self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
-        self.CGST_label.grid(row=7, column=0, sticky=tk.W)
+        self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
         self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
-        self.IGST_label.grid(row=8, column=0, sticky=tk.W)
+        self.IGST_label.grid(row=9, column=0, sticky=tk.W)
 
         self.from_label = tk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
@@ -4312,35 +4296,37 @@ class psd(tk.Frame):
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
+        self.id_entry = tk.Entry(self.data_Entry)
+        self.id_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
                             date_pattern='yyyy-mm-dd')
-        self.Date_entry.grid(row=0, column=1, sticky=tk.W)
+        self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
-        self.p_entry.grid(row=1, column=1, sticky=tk.W)
+        self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
         self.inv_entry = tk.Entry(self.data_Entry)
-        self.inv_entry.grid(row=2, column=1, sticky=tk.W)
+        self.inv_entry.grid(row=3, column=1, sticky=tk.W)
 
         self.Qty_entry = tk.Entry(self.data_Entry)
-        self.Qty_entry.grid(row=3, column=1, sticky=tk.W)
+        self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
 
         self.qtyt_entry = tk.Entry(self.data_Entry)
-        self.qtyt_entry.grid(row=4, column=1, sticky=tk.W)
+        self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
 
         self.amount_entry = tk.Entry(self.data_Entry)
-        self.amount_entry.grid(row=5, column=1, sticky=tk.W)
+        self.amount_entry.grid(row=6, column=1, sticky=tk.W)
         
         self.SGST_entry = tk.Entry(self.data_Entry)
-        self.SGST_entry.grid(row=6, column=1, sticky=tk.W)
+        self.SGST_entry.grid(row=7, column=1, sticky=tk.W)
 
         self.CGST_entry = tk.Entry(self.data_Entry)
-        self.CGST_entry.grid(row=7, column=1, sticky=tk.W)
+        self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
         self.IGST_entry = tk.Entry(self.data_Entry)
-        self.IGST_entry.grid(row=8, column=1, sticky=tk.W)
+        self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
@@ -4379,7 +4365,7 @@ class psd(tk.Frame):
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['SL.No', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
+        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
@@ -4393,7 +4379,7 @@ class psd(tk.Frame):
 
         counter = 1
         for i in data:
-            self.tree.insert('', 'end',values=(counter, i['Date'], i['INVNo'], i['Party'], i['Qty'],\
+            self.tree.insert('', 'end',values=(i['Id'], i['Date'], i['INVNo'], i['Party'], i['Qty'],\
                                     i['QtyType'], i['Amount'], i['SGST'], i['CGST'],i['IGST'],\
                                     i['Total']))
             counter+=1
@@ -4414,6 +4400,7 @@ class psd(tk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
+            self.id_entry.delete(0, tk.END)
             self.Date_entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.inv_entry.delete(0, tk.END)
@@ -4424,6 +4411,7 @@ class psd(tk.Frame):
             self.CGST_entry.delete(0, tk.END)
             self.IGST_entry.delete(0, tk.END)
             
+            self.id_entry.insert(0, values[0])
             self.Date_entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.inv_entry.insert(0, values[3])
@@ -4437,6 +4425,7 @@ class psd(tk.Frame):
 
     def add(self):
         try:
+            id = int(self.id_entry.get())
             datestr = self.Date_entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
@@ -4449,11 +4438,11 @@ class psd(tk.Frame):
             sgst = float(self.SGST_entry.get())
             cgst = float(self.CGST_entry.get()) 
             igst = float(self.IGST_entry.get())
-            data = {'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
+            data = {'Id':id, 'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
                     'Amount':amt, "SGST":sgst, "CGST": cgst, "IGST":igst }
             
             self.collection.insert_one(data)
-            self.collection.update_one({'Date': date},
+            self.collection.update_one({'Id': id},
                                 [{'$addFields': {'Total': {'$add': ['$SGST', '$CGST','$IGST', '$Amount']}}}])
             
             self.reset()
@@ -4462,6 +4451,7 @@ class psd(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
+        self.id_entry.delete(0, tk.END)
         self.p_entry.delete(0, tk.END)
         self.inv_entry.delete(0, tk.END)
         self.Qty_entry.delete(0, tk.END)
@@ -4504,7 +4494,7 @@ class psd(tk.Frame):
         
         counter = 1
         for i in data:
-            self.tree.insert('', 'end',values=(counter, i['Date'], i['INVNo'], i['Party'], i['Qty'],\
+            self.tree.insert('', 'end',values=(i['Id'], i['Date'], i['INVNo'], i['Party'], i['Qty'],\
                                     i['QtyType'], i['Amount'], i['SGST'], i['CGST'],i['IGST'],\
                                     i['Total']))
             counter+=1
@@ -4515,6 +4505,7 @@ class psd(tk.Frame):
                                         j['totalIGST'], j['total']), tags= 'total')
 
     def update(self):
+        id = int(self.id_entry.get())
         datestr = self.Date_entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
@@ -4527,18 +4518,15 @@ class psd(tk.Frame):
         sgst = float(self.SGST_entry.get())
         cgst = float(self.CGST_entry.get()) 
         igst = float(self.IGST_entry.get())
-        self.collection.update_one({"Date": date}, {'$set':{'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
+        self.collection.update_one({"Id": id}, {'$set':{'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
                     'Amount':amt, "SGST":sgst, "CGST": cgst, "IGST":igst }}) 
         self.collection.update_one({'Date': date},
                                 [{'$addFields': {'Total': {'$add': ['$SGST', '$CGST','$IGST', '$Amount']}}}])
         self.showall()  
 
     def delete(self):
-        datestr = self.Date_entry.get()
-        if len(datestr)<= 10:
-            datestr = datestr+" 00:00:00"
-        date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
-        self.collection.delete_one({'Date':date})
+        id = int(self.id_entry.get())
+        self.collection.delete_one({'Id':id})
         self.reset()
         self.showall()
 
@@ -4551,9 +4539,9 @@ class sad(tk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent)
-        self.tree['columns'] = ('SL.No', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
+        self.tree['columns'] = ('Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total')
-        self.tree.column("SL.No", width=50, minwidth=25)
+        self.tree.column("Id", width=50, minwidth=25)
         self.tree.column("Date", width=130, minwidth=25)
         self.tree.column("Party", width=80, minwidth=25)
         self.tree.column("INVNo", width=80, minwidth=25)
@@ -4565,7 +4553,7 @@ class sad(tk.Frame):
         self.tree.column("IGST", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
-        self.tree.heading('SL.No', text='SL.NO', anchor=tk.CENTER)
+        self.tree.heading('Id', text='Id', anchor=tk.CENTER)
         self.tree.heading('Date', text='Date')
         self.tree.heading('Party', text='Party')
         self.tree.heading('INVNo', text='INV.NO')
@@ -4588,32 +4576,35 @@ class sad(tk.Frame):
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
+        self.id_label = tk.Label(self.data_Entry, text="Id:")
+        self.id_label.grid(row=0, column=0, sticky=tk.W)
+
         self.Date_label = tk.Label(self.data_Entry, text="Date:")
-        self.Date_label.grid(row=0, column=0, sticky=tk.W)
+        self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
         self.p_label = tk.Label(self.data_Entry, text="Party:")
-        self.p_label.grid(row=1, column=0, sticky=tk.W)
+        self.p_label.grid(row=2, column=0, sticky=tk.W)
 
         self.inv_label = tk.Label(self.data_Entry, text="INV.NO:")
-        self.inv_label.grid(row=2, column=0, sticky=tk.W)
+        self.inv_label.grid(row=3, column=0, sticky=tk.W)
 
         self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
-        self.Qty_label.grid(row=3, column=0, sticky=tk.W)
+        self.Qty_label.grid(row=4, column=0, sticky=tk.W)
 
         self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
-        self.qtyt_label.grid(row=4, column=0, sticky=tk.W)
+        self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
 
         self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
-        self.amount_label.grid(row=5,column=0, sticky=tk.W)
+        self.amount_label.grid(row=6,column=0, sticky=tk.W)
 
         self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
-        self.SGST_label.grid(row=6, column=0, sticky=tk.W)
+        self.SGST_label.grid(row=7, column=0, sticky=tk.W)
 
         self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
-        self.CGST_label.grid(row=7, column=0, sticky=tk.W)
+        self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
         self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
-        self.IGST_label.grid(row=8, column=0, sticky=tk.W)
+        self.IGST_label.grid(row=9, column=0, sticky=tk.W)
 
         self.from_label = tk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
@@ -4625,35 +4616,37 @@ class sad(tk.Frame):
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
+        self.id_entry = tk.Entry(self.data_Entry)
+        self.id_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
                             date_pattern='yyyy-mm-dd')
-        self.Date_entry.grid(row=0, column=1, sticky=tk.W)
+        self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
-        self.p_entry.grid(row=1, column=1, sticky=tk.W)
+        self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
         self.inv_entry = tk.Entry(self.data_Entry)
-        self.inv_entry.grid(row=2, column=1, sticky=tk.W)
+        self.inv_entry.grid(row=3, column=1, sticky=tk.W)
 
         self.Qty_entry = tk.Entry(self.data_Entry)
-        self.Qty_entry.grid(row=3, column=1, sticky=tk.W)
+        self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
 
         self.qtyt_entry = tk.Entry(self.data_Entry)
-        self.qtyt_entry.grid(row=4, column=1, sticky=tk.W)
+        self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
 
         self.amount_entry = tk.Entry(self.data_Entry)
-        self.amount_entry.grid(row=5, column=1, sticky=tk.W)
+        self.amount_entry.grid(row=6, column=1, sticky=tk.W)
         
         self.SGST_entry = tk.Entry(self.data_Entry)
-        self.SGST_entry.grid(row=6, column=1, sticky=tk.W)
+        self.SGST_entry.grid(row=7, column=1, sticky=tk.W)
 
         self.CGST_entry = tk.Entry(self.data_Entry)
-        self.CGST_entry.grid(row=7, column=1, sticky=tk.W)
+        self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
         self.IGST_entry = tk.Entry(self.data_Entry)
-        self.IGST_entry.grid(row=8, column=1, sticky=tk.W)
+        self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
@@ -4692,7 +4685,7 @@ class sad(tk.Frame):
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['SL.No', 'Date','Party', 'INVNo', 'Qty', 'QtyType',
+        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
@@ -4706,7 +4699,7 @@ class sad(tk.Frame):
 
         counter = 1
         for i in data:
-            self.tree.insert('', 'end',values=(counter, i['Date'], i['INVNo'], i['Party'], i['Qty'],\
+            self.tree.insert('', 'end',values=(i['Id'], i['Date'], i['INVNo'], i['Party'], i['Qty'],\
                                     i['QtyType'], i['Amount'], i['SGST'], i['CGST'],i['IGST'],\
                                     i['Total']))
             counter+=1
@@ -4727,6 +4720,7 @@ class sad(tk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
+            self.id_entry.delete(0, tk.END)
             self.Date_entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.inv_entry.delete(0, tk.END)
@@ -4737,6 +4731,7 @@ class sad(tk.Frame):
             self.CGST_entry.delete(0, tk.END)
             self.IGST_entry.delete(0, tk.END)
             
+            self.id_entry.insert(0, values[0])
             self.Date_entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.inv_entry.insert(0, values[3])
@@ -4750,6 +4745,7 @@ class sad(tk.Frame):
 
     def add(self):
         try:
+            id = int(self.id_entry.get())
             datestr = self.Date_entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
@@ -4762,11 +4758,11 @@ class sad(tk.Frame):
             sgst = float(self.SGST_entry.get())
             cgst = float(self.CGST_entry.get()) 
             igst = float(self.IGST_entry.get())
-            data = {'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
+            data = {'Id':id, 'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
                     'Amount':amt, "SGST":sgst, "CGST": cgst, "IGST":igst }
             
             self.collection.insert_one(data)
-            self.collection.update_one({'Date': date},
+            self.collection.update_one({'Id': id},
                                 [{'$addFields': {'Total': {'$add': ['$SGST', '$CGST','$IGST', '$Amount']}}}])
             
             self.reset()
@@ -4775,6 +4771,7 @@ class sad(tk.Frame):
             messagebox.showerror('Error', e)
     
     def reset(self):
+        self.id_entry.delete(0, tk.END)
         self.p_entry.delete(0, tk.END)
         self.inv_entry.delete(0, tk.END)
         self.Qty_entry.delete(0, tk.END)
@@ -4817,7 +4814,7 @@ class sad(tk.Frame):
         
         counter = 1
         for i in data:
-            self.tree.insert('', 'end',values=(counter, i['Date'], i['INVNo'], i['Party'], i['Qty'],\
+            self.tree.insert('', 'end',values=(i['Id'], i['Date'], i['INVNo'], i['Party'], i['Qty'],\
                                     i['QtyType'], i['Amount'], i['SGST'], i['CGST'],i['IGST'],\
                                     i['Total']))
             counter+=1
@@ -4828,6 +4825,7 @@ class sad(tk.Frame):
                                         j['totalIGST'], j['total']), tags= 'total')
 
     def update(self):
+        id = int(self.id_entry.get())
         datestr = self.Date_entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
@@ -4840,18 +4838,15 @@ class sad(tk.Frame):
         sgst = float(self.SGST_entry.get())
         cgst = float(self.CGST_entry.get()) 
         igst = float(self.IGST_entry.get())
-        self.collection.update_one({"Date": date}, {'$set':{'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
+        self.collection.update_one({"Id": id}, {'$set':{'Date':date, 'Party': p, 'INVNo':i,'Qty':qty, 'QtyType':qtyt,
                     'Amount':amt, "SGST":sgst, "CGST": cgst, "IGST":igst }}) 
         self.collection.update_one({'Date': date},
                                 [{'$addFields': {'Total': {'$add': ['$SGST', '$CGST','$IGST', '$Amount']}}}])
         self.showall()  
 
     def delete(self):
-        datestr = self.Date_entry.get()
-        if len(datestr)<= 10:
-            datestr = datestr+" 00:00:00"
-        date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
-        self.collection.delete_one({'Date':date})
+        id = int(self.id_entry.get())
+        self.collection.delete_one({'Id':id})
         self.reset()
         self.showall()
 
@@ -6338,8 +6333,8 @@ class conw(tk.Frame):
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
         self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
 
-        self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
-        self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
+        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
         self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
         self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
@@ -6455,7 +6450,7 @@ class conw(tk.Frame):
             self.t7_entry.insert(0, values[9])
             self.t_entry.insert(0, values[10])
 
-            query = {'Con':int(values[0])}
+            query = {'GradeD':values[2]}
             projection = {"Details":1}
             data = self.collection.find_one(query,projection )
             self.text.insert("1.0", data['Details'])
@@ -6473,14 +6468,16 @@ class conw(tk.Frame):
             t6 = float(self.t6_entry.get())
             t7 = float(self.t7_entry.get())
             t = float(self.t_entry.get())
+
+            tt = self.text.get("1.0", tk.END)
+            da= {"Details":tt}
             data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t }
+                    'Total':t, 'Details':tt }
             
             self.collection.insert_one(data)
             
-            self.reset()
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
@@ -6651,15 +6648,16 @@ class conw(tk.Frame):
         t6 = float(self.t6_entry.get())
         t7 = float(self.t7_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"Con":i}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+
+        tt = self.text.get("1.0", tk.END)
+        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t }}) 
-        self.showall()  
+                    'Total':t , 'Details':tt}})  
 
     def delete(self):
-        i = int(self.i_entry.get())
-        self.collection.delete_one({'Con':i})
+        gd = self.gd_entry.get()
+        self.collection.delete_one({'GradeD':gd})
         self.reset()
         self.showall()
 
@@ -6808,8 +6806,8 @@ class conp(tk.Frame):
         self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
         self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
 
-        self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
-        self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
+        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
         self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
         self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
@@ -6925,7 +6923,7 @@ class conp(tk.Frame):
             self.t7_entry.insert(0, values[9])
             self.t_entry.insert(0, values[10])
 
-            query = {'Con':int(values[0])}
+            query = {'GradeD':values[2]}
             projection = {"Details":1}
             data = self.collection.find_one(query,projection )
             self.text.insert("1.0", data['Details'])
@@ -6943,14 +6941,16 @@ class conp(tk.Frame):
             t6 = float(self.t6_entry.get())
             t7 = float(self.t7_entry.get())
             t = float(self.t_entry.get())
+
+            tt = self.text.get("1.0", tk.END)
+            da= {"Details":tt}
             data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t }
+                    'Total':t, 'Details':tt }
             
             self.collection.insert_one(data)
             
-            self.reset()
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
@@ -7121,15 +7121,16 @@ class conp(tk.Frame):
         t6 = float(self.t6_entry.get())
         t7 = float(self.t7_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"Con":i}, {'$set':{'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
+
+        tt = self.text.get("1.0", tk.END)
+        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
                     'Trip3':t3, 'Trip4':t4,
                     'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t }}) 
-        self.showall()  
+                    'Total':t , 'Details':tt}}) 
 
     def delete(self):
-        i = int(self.i_entry.get())
-        self.collection.delete_one({'Con':i})
+        gd = self.gd_entry.get()
+        self.collection.delete_one({'GradeD':gd})
         self.reset()
         self.showall()
 
