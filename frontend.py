@@ -3,12 +3,13 @@ from tkinter import ttk
 from tkinter import messagebox
 from pymongo import MongoClient
 from tkinter import simpledialog
-from tkcalendar import DateEntry
+# from tkcalendar import DateEntry
 import datetime
 import pandas as pd
 from tkinter import filedialog
 import os
 from bson import ObjectId
+import ttkbootstrap as ttk
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -59,7 +60,7 @@ class MonthYearEntry(ttk.Frame):
         self.month_combo.set(values[month-1])
         self.year_combo.set(year)
 
-class App(tk.Tk):
+class App(ttk.Window):
     def __init__(self):
         super().__init__()
         # Main Setup
@@ -75,7 +76,7 @@ class App(tk.Tk):
 
         self.mainloop()
 
-class Sidebar(tk.Frame):
+class Sidebar(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.frame = tk.Frame(self)
@@ -554,7 +555,7 @@ class Sidebar(tk.Frame):
     def clear_sel(self,event):
         self.dblist.selection_clear(0, tk.END)
 
-class Main(tk.Frame):
+class Main(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.frame = tk.Frame(self)
@@ -567,7 +568,7 @@ class Main(tk.Frame):
             self.a.destroy()
         self.a = A(self,text)
     
-class A(tk.Frame):
+class A(ttk.Frame):
     def __init__(self, parent, db):
         super().__init__(parent)
         self.db = client[db]
@@ -708,7 +709,7 @@ class A(tk.Frame):
             self.book.add(tj3, text="Total")
             self.cont = cont(tj3, "Container", "Total")
 
-class rcn(tk.Frame):
+class rcn(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -812,9 +813,8 @@ class rcn(tk.Frame):
         self.BillNo_entry = tk.Entry(self.data_Entry)
         self.BillNo_entry.grid(row=0, column=1, sticky=tk.W)
 
-        self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
-                            foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+        self.Date_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.Rate_entry = tk.Entry(self.data_Entry)
@@ -841,14 +841,12 @@ class rcn(tk.Frame):
         self.IGST_entry = tk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.from_entry = DateEntry(self.range_entry, width=12, background='red',
-                            foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+        self.from_entry = ttk.DateEntry(self.range_entry,
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
-        self.to_entry = DateEntry(self.range_entry, width=12, background='red',
-                            foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+        self.to_entry = ttk.DateEntry(self.range_entry, width=12,
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -907,7 +905,7 @@ class rcn(tk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.BillNo_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.Rate_entry.delete(0, tk.END)
             self.Bags_entry.delete(0, tk.END)
             self.Quintal_entry.delete(0, tk.END)
@@ -918,7 +916,7 @@ class rcn(tk.Frame):
             self.IGST_entry.delete(0, tk.END)
             
             self.BillNo_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.Rate_entry.insert(0, values[3])
             self.Bags_entry.insert(0, values[4])
             self.Quintal_entry.insert(0, values[5])
@@ -947,7 +945,7 @@ class rcn(tk.Frame):
     def add(self):
         try:
             bill = int(self.BillNo_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1066,7 +1064,7 @@ class rcn(tk.Frame):
         if filename:
             df.to_excel(filename, index=False)
 
-class ckn(tk.Frame):
+class ckn(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -1164,7 +1162,7 @@ class ckn(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.Qty_entry = tk.Entry(self.data_Entry)
@@ -1196,12 +1194,12 @@ class ckn(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -1420,7 +1418,7 @@ class ckn(tk.Frame):
         if filename:
             df.to_excel(filename, index=False)
 
-class sdd(tk.Frame):
+class sdd(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -1525,7 +1523,7 @@ class sdd(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.Rate_entry = tk.Entry(self.data_Entry)
@@ -1555,12 +1553,12 @@ class sdd(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         # #buttons
@@ -1618,12 +1616,12 @@ class sdd(tk.Frame):
         frame.geometry('1000x600')
         self.from_entry1 = DateEntry(frame, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry1.grid(row=0, column=1, sticky=tk.W)
 
         self.to_entry1 = DateEntry(frame, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry1.grid(row=0, column=3, sticky=tk.W)
         self.from_label1 = tk.Label(frame, text="From:")
         self.from_label1.grid(row=0, column= 0, sticky=tk.W)
@@ -1916,7 +1914,7 @@ class sdd(tk.Frame):
         self.reset()
         self.showall()
 
-class hdr(tk.Frame):
+class hdr(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -2028,7 +2026,7 @@ class hdr(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.HRate_entry = tk.Entry(self.data_Entry)
@@ -2069,12 +2067,12 @@ class hdr(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -2366,7 +2364,7 @@ class hdr(tk.Frame):
         self.reset()
         self.showall()
 
-class chart(tk.Frame):
+class chart(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -2624,7 +2622,7 @@ class chart(tk.Frame):
         self.reset()
         self.showall()
 
-class ker(tk.Frame):
+class ker(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -2897,7 +2895,7 @@ class ker(tk.Frame):
         self.reset()
         self.showall()
 
-class ss(tk.Frame):
+class ss(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -2973,7 +2971,7 @@ class ss(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.ker_entry = tk.Entry(self.data_Entry)
@@ -2994,12 +2992,12 @@ class ss(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -3257,7 +3255,7 @@ class ps(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.ker_entry = tk.Entry(self.data_Entry)
@@ -3278,12 +3276,12 @@ class ps(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -3465,7 +3463,7 @@ class ps(tk.Frame):
         self.reset()
         self.showall()
 
-class pa(tk.Frame):
+class pa(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -3521,7 +3519,7 @@ class pa(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.ros_entry = tk.Entry(self.data_Entry)
@@ -3530,12 +3528,12 @@ class pa(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -3672,7 +3670,7 @@ class pa(tk.Frame):
         self.reset()
         self.showall()
 
-class srcn(tk.Frame):
+class srcn(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -3740,7 +3738,7 @@ class srcn(tk.Frame):
         #entry
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.osb_entry = tk.Entry(self.data_Entry)
@@ -3761,12 +3759,12 @@ class srcn(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -3941,7 +3939,7 @@ class srcn(tk.Frame):
         self.reset()
         self.showall()
 
-class sckn(tk.Frame):
+class sckn(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -4009,7 +4007,7 @@ class sckn(tk.Frame):
         #entry
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
         self.osb_entry = tk.Entry(self.data_Entry)
@@ -4030,12 +4028,12 @@ class sckn(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -4210,7 +4208,7 @@ class sckn(tk.Frame):
         self.reset()
         self.showall()
 
-class psd(tk.Frame):
+class psd(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -4301,7 +4299,7 @@ class psd(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
@@ -4330,12 +4328,12 @@ class psd(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -4530,7 +4528,7 @@ class psd(tk.Frame):
         self.reset()
         self.showall()
 
-class sad(tk.Frame):
+class sad(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -4621,7 +4619,7 @@ class sad(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
@@ -4650,12 +4648,12 @@ class sad(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -4850,7 +4848,7 @@ class sad(tk.Frame):
         self.reset()
         self.showall()
 
-class gstapp(tk.Frame):
+class gstapp(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -4934,7 +4932,7 @@ class gstapp(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=0, column=1, sticky=tk.W)
         
         self.scgst_entry = tk.Entry(self.data_Entry)
@@ -4960,17 +4958,17 @@ class gstapp(tk.Frame):
 
         self.pd_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.pd_entry.grid(row=8, column=1, sticky=tk.W)
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -5174,7 +5172,7 @@ class gstapp(tk.Frame):
         self.reset()
         self.showall()
 
-class cash(tk.Frame):
+class cash(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -5245,7 +5243,7 @@ class cash(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
@@ -5262,12 +5260,12 @@ class cash(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -5424,7 +5422,7 @@ class cash(tk.Frame):
         self.reset()
         self.showall()
 
-class gstpsd(tk.Frame):
+class gstpsd(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -5528,7 +5526,7 @@ class gstpsd(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
@@ -5566,12 +5564,12 @@ class gstpsd(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -5806,7 +5804,7 @@ class gstpsd(tk.Frame):
         self.reset()
         self.showall()
 
-class gstsad(tk.Frame):
+class gstsad(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -5910,7 +5908,7 @@ class gstsad(tk.Frame):
 
         self.Date_entry = DateEntry(self.data_Entry, width=12, background='darkblue',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
         self.p_entry = tk.Entry(self.data_Entry)
@@ -5948,12 +5946,12 @@ class gstsad(tk.Frame):
 
         self.from_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.from_entry.grid(row=0, column=5, sticky=tk.W)
 
         self.to_entry = DateEntry(self.range_entry, width=12, background='red',
                             foreground='white', borderwidth=2,
-                            date_pattern='yyyy-mm-dd')
+                            dateformat='%Y-%m-%d')
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
@@ -6661,7 +6659,7 @@ class conw(tk.Frame):
         self.reset()
         self.showall()
 
-class conp(tk.Frame):
+class conp(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -7134,7 +7132,7 @@ class conp(tk.Frame):
         self.reset()
         self.showall()
 
-class cont(tk.Frame):
+class cont(ttk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
