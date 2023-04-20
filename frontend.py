@@ -1,16 +1,14 @@
 import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
 from tkinter import messagebox
 from pymongo import MongoClient
 from tkinter import simpledialog
-# from tkcalendar import DateEntry
 import datetime
 import pandas as pd
 from tkinter import filedialog
 import os
 from bson import ObjectId
-import ttkbootstrap as ttk
-from ttkbootstrap import Style
+
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -66,7 +64,7 @@ class App:
         super().__init__()
         # Main Setup
         self.master = master
-        self.style = Style()
+        self.style = ttk.Style()
         self.master.title("Shri Shiddivinayaka Industries")
         self.master.geometry('1000x600')
         self.master.minsize(1000,600)
@@ -991,9 +989,9 @@ class rcn(ttk.Frame):
 
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -1342,9 +1340,9 @@ class ckn(ttk.Frame):
 
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -1833,9 +1831,9 @@ class sdd(ttk.Frame):
 
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -2251,9 +2249,9 @@ class hdr(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -2555,9 +2553,9 @@ class chart(ttk.Frame):
 
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+"-01 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+"-01 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -3106,9 +3104,9 @@ class ss(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -3387,9 +3385,9 @@ class ps(tk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -3604,9 +3602,9 @@ class pa(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -3856,9 +3854,9 @@ class srcn(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -4122,9 +4120,9 @@ class sckn(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -4439,9 +4437,9 @@ class psd(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -4756,9 +4754,9 @@ class sad(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -5067,9 +5065,9 @@ class gstapp(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -5334,9 +5332,9 @@ class cash(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -5687,9 +5685,9 @@ class gstpsd(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
@@ -6066,9 +6064,9 @@ class gstsad(ttk.Frame):
         
     def range(self):
         self.tree.delete(*self.tree.get_children())
-        fromdate = self.from_entry.get()
+        fromdate = self.from_entry.entry.get()
         fromdate = fromdate+" 00:00:00"
-        todate = self.to_entry.get()
+        todate = self.to_entry.entry.get()
         todate = todate+" 00:00:00"
         fd = datetime.datetime.strptime(fromdate, '%Y-%m-%d 00:00:00')
         td = datetime.datetime.strptime(todate, '%Y-%m-%d 00:00:00')
