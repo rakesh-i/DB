@@ -10,6 +10,7 @@ from tkinter import filedialog
 import os
 from bson import ObjectId
 import ttkbootstrap as ttk
+from ttkbootstrap import Style
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -60,21 +61,21 @@ class MonthYearEntry(ttk.Frame):
         self.month_combo.set(values[month-1])
         self.year_combo.set(year)
 
-class App(ttk.Window):
-    def __init__(self):
+class App:
+    def __init__(self, master):
         super().__init__()
         # Main Setup
-        self.title("Shri Shiddivinayaka Industries")
-        self.geometry('1000x600')
-        self.minsize(1000,600)
+        self.master = master
+        self.style = Style()
+        self.master.title("Shri Shiddivinayaka Industries")
+        self.master.geometry('1000x600')
+        self.master.minsize(1000,600)
         os.popen("mongod")
         
         # Widgets
         if hasattr(self, 'sidebar'):
-            self.sidebar.destroy()
-        self.sidebar = Sidebar(self)
-
-        self.mainloop()
+            self.master.sidebar.destroy()
+        self.master.sidebar = Sidebar(self.master)
 
 class Sidebar(ttk.Frame):
     def __init__(self, parent):
@@ -82,20 +83,19 @@ class Sidebar(ttk.Frame):
         self.frame = tk.Frame(self)
         self.frame.pack(expand=True, fill="both")
         self.place(x=0, y=0, relheight=1, relwidth=.2)
-        self.frame.configure(bg='#F9FBFA')
         self.create_w(self.frame)
         if hasattr(self, 'main'):
             self.main.destroy()
         self.main = Main(parent)    
 
     def create_w(self, frame):
-        self.currentdb=  tk.Label(frame, text="Welcome", font=('Calibri',25, 'bold'),bg='#F9FBFA')
-        refresh = tk.Button(frame,text='Refresh', bg='#E8EAF6', command=self.add_data)
-        delete = tk.Button(frame, text="Delete", bg='#E8EAF6',command=self.getval)
-        add = tk.Button(frame, text="Add", bg='#E8EAF6', command=self.newdb)
-        search_box = tk.LabelFrame(frame, bg='#E8EAF6')
-        self.search_entry = tk.Entry(search_box)
-        search_button = tk.Button(search_box, text="Search", bg='#E8EAF6', command=self.search)
+        self.currentdb=  ttk.Label(frame, text="Welcome", font=('Calibri',25, 'bold'))
+        refresh = ttk.Button(frame,text='Refresh',bootstyle='warning', command=self.add_data)
+        delete = ttk.Button(frame, text="Delete",bootstyle='danger', command=self.getval)
+        add = ttk.Button(frame, text="Add", command=self.newdb)
+        search_box = tk.LabelFrame(frame)
+        self.search_entry = ttk.Entry(search_box)
+        search_button = ttk.Button(search_box, text="Search", bootstyle='success', command=self.search)
 
         self.dblist = tk.Listbox(frame, height=10)
         self.dblist.bind_all("<Escape>", self.clear_sel)
@@ -130,9 +130,9 @@ class Sidebar(ttk.Frame):
     def update_s(self, event):
         x = self.winfo_width()
         if x==200:
-            self.search_entry.configure(width=22)
+            self.search_entry.configure(width=19)
         else:
-            self.search_entry.configure(width=int(20+x/19))
+            self.search_entry.configure(width=int(17+x/19))
     
     def add_data(self):
         self.dblist.delete(0, 'end')
@@ -719,7 +719,7 @@ class rcn(ttk.Frame):
     def create_w(self, parent):
         # treeview 
         # data = self.collection.find().sort("BillNo",1)
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'BillNo', 'Date', 'Rate', 'Bags', 'Quintal', 'KGs', \
                     'Amount' ,'SGST', 'CGST','IGST', 'Total')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -752,29 +752,29 @@ class rcn(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.BillNo_label = tk.Label(self.data_Entry, text="BillNO:")
+        self.BillNo_label = ttk.Label(self.data_Entry, text="BillNO:")
         self.BillNo_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.Rate_label = tk.Label(self.data_Entry, text="Rate:")
+        self.Rate_label = ttk.Label(self.data_Entry, text="Rate:")
         self.Rate_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.Bags_label = tk.Label(self.data_Entry, text="Bags:")
+        self.Bags_label = ttk.Label(self.data_Entry, text="Bags:")
         self.Bags_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Quintal_label = tk.Label(self.data_Entry, text="Quintal:")
+        self.Quintal_label = ttk.Label(self.data_Entry, text="Quintal:")
         self.Quintal_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.Quantity_label = tk.Label(self.data_Entry, text="KGs:")
+        self.Quantity_label = ttk.Label(self.data_Entry, text="KGs:")
         self.Quantity_label.grid(row=5, column=0, sticky=tk.W)
 
         self.options = [
@@ -788,57 +788,57 @@ class rcn(ttk.Frame):
         self.drop = tk.OptionMenu(self.data_Entry, self.clicked, *self.options)
         self.drop.grid(row=6, column=2, sticky=tk.W, padx=4, pady=4)
 
-        self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
+        self.amount_label = ttk.Label(self.data_Entry, text = "Amount:")
         self.amount_label.grid(row=6,column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.BillNo_entry = tk.Entry(self.data_Entry)
+        self.BillNo_entry = ttk.Entry(self.data_Entry)
         self.BillNo_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.Rate_entry = tk.Entry(self.data_Entry)
+        self.Rate_entry = ttk.Entry(self.data_Entry)
         self.Rate_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.Bags_entry = tk.Entry(self.data_Entry)
+        self.Bags_entry = ttk.Entry(self.data_Entry)
         self.Bags_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.Quintal_entry = tk.Entry(self.data_Entry)
+        self.Quintal_entry = ttk.Entry(self.data_Entry)
         self.Quintal_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.KGs_entry = tk.Entry(self.data_Entry)
+        self.KGs_entry = ttk.Entry(self.data_Entry)
         self.KGs_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.amount_entry = tk.Entry(self.data_Entry)
+        self.amount_entry = ttk.Entry(self.data_Entry)
         self.amount_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -850,28 +850,28 @@ class rcn(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
         self.add_button.grid(row=10, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
         self.update_button.grid(row=10, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
         self.delete_button.grid(row=10, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
         self.show_button.grid(row=10, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
+        self.calAmt_button = ttk.Button(self.data_Entry, text="Calculate", command=self.cal)
         self.calAmt_button.grid(row=6, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset", command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset", command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
         self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
         
-        self.reset_button = tk.Button(self.data_Entry, text="Export", command=self.save)
+        self.reset_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
         self.reset_button.grid(column=4, row=10, sticky=tk.NSEW, padx=3, pady=3)
 
     def showall(self):
@@ -1027,7 +1027,7 @@ class rcn(ttk.Frame):
 
     def update(self):
         bill = int(self.BillNo_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1072,7 +1072,7 @@ class ckn(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'BillNo', 'Date', 'Qty', 'WRate', 'Wholes', 'PRate', \
                     'Pieces' ,'Amount', 'SGST', 'CGST','IGST', 'Total')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -1107,88 +1107,88 @@ class ckn(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.BillNo_label = tk.Label(self.data_Entry, text="BillNO:")
+        self.BillNo_label = ttk.Label(self.data_Entry, text="BillNO:")
         self.BillNo_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.WRate_label = tk.Label(self.data_Entry, text="WRate:")
+        self.WRate_label = ttk.Label(self.data_Entry, text="WRate:")
         self.WRate_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Wholes_label = tk.Label(self.data_Entry, text="Wholes:")
+        self.Wholes_label = ttk.Label(self.data_Entry, text="Wholes:")
         self.Wholes_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.PRate_label = tk.Label(self.data_Entry, text="PRate:")
+        self.PRate_label = ttk.Label(self.data_Entry, text="PRate:")
         self.PRate_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.Pieces_label = tk.Label(self.data_Entry, text="Pieces:")
+        self.Pieces_label = ttk.Label(self.data_Entry, text="Pieces:")
         self.Pieces_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
+        self.amount_label = ttk.Label(self.data_Entry, text = "Amount:")
         self.amount_label.grid(row=7,column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.BillNo_entry = tk.Entry(self.data_Entry)
+        self.BillNo_entry = ttk.Entry(self.data_Entry)
         self.BillNo_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.WRate_entry = tk.Entry(self.data_Entry)
+        self.WRate_entry = ttk.Entry(self.data_Entry)
         self.WRate_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.Wholes_entry = tk.Entry(self.data_Entry)
+        self.Wholes_entry = ttk.Entry(self.data_Entry)
         self.Wholes_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.PRate_entry = tk.Entry(self.data_Entry)
+        self.PRate_entry = ttk.Entry(self.data_Entry)
         self.PRate_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.Pieces_entry = tk.Entry(self.data_Entry)
+        self.Pieces_entry = ttk.Entry(self.data_Entry)
         self.Pieces_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.amount_entry = tk.Entry(self.data_Entry)
+        self.amount_entry = ttk.Entry(self.data_Entry)
         self.amount_entry.grid(row=7, column=1, sticky=tk.W)
         
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=10, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -1200,29 +1200,29 @@ class ckn(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=7, column=2, sticky=tk.NSEW)
+        self.calAmt_button = ttk.Button(self.data_Entry, text="Calculate", command=self.cal)
+        self.calAmt_button.grid(row=7, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
-        self.reset_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.reset_button.grid(column=4, row=11)
+        self.reset_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.reset_button.grid(column=4, row=11, padx=3, pady=3)
 
     def showall(self):
         self.tree.delete(*self.tree.get_children())
@@ -1256,7 +1256,7 @@ class ckn(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.BillNo_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
             self.WRate_entry.delete(0, tk.END)
             self.Wholes_entry.delete(0, tk.END)
@@ -1268,7 +1268,7 @@ class ckn(ttk.Frame):
             self.IGST_entry.delete(0, tk.END)
             
             self.BillNo_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.Qty_entry.insert(0, values[3])
             self.WRate_entry.insert(0, values[4])
             self.Wholes_entry.insert(0, values[5])
@@ -1291,7 +1291,7 @@ class ckn(ttk.Frame):
     def add(self):
         try:
             bill = int(self.BillNo_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1378,7 +1378,7 @@ class ckn(ttk.Frame):
 
     def update(self):
         bill = int(self.BillNo_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1425,7 +1425,7 @@ class sdd(ttk.Frame):
     def create_w(self, parent):
         # treeview 
         # data = self.collection.find().sort("BillNo",1)
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'BillNo', 'Date', 'Rate', 'Bags', 'KGs', \
                     'Amount' ,'SGST', 'CGST','IGST','Total', 'ActualQty')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -1458,26 +1458,26 @@ class sdd(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.BillNo_label = tk.Label(self.data_Entry, text="BillNO:")
+        self.BillNo_label = ttk.Label(self.data_Entry, text="BillNO:")
         self.BillNo_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.Rate_label = tk.Label(self.data_Entry, text="Rate:")
+        self.Rate_label = ttk.Label(self.data_Entry, text="Rate:")
         self.Rate_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.Bags_label = tk.Label(self.data_Entry, text="Bags:")
+        self.Bags_label = ttk.Label(self.data_Entry, text="Bags:")
         self.Bags_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Quantity_label = tk.Label(self.data_Entry, text="KGs:")
+        self.Quantity_label = ttk.Label(self.data_Entry, text="KGs:")
         self.Quantity_label.grid(row=4, column=0, sticky=tk.W)
 
         self.options = [
@@ -1490,61 +1490,61 @@ class sdd(ttk.Frame):
         self.drop = tk.OptionMenu(self.data_Entry, self.clicked, *self.options)
         self.drop.grid(row=5, column=2, sticky=tk.W)
 
-        self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
+        self.amount_label = ttk.Label(self.data_Entry, text = "Amount:")
         self.amount_label.grid(row=5,column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.Actual_label = tk.Label(self.data_Entry, text="Actual Qty:")
+        self.Actual_label = ttk.Label(self.data_Entry, text="Actual Qty:")
         self.Actual_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.BillNo_entry = tk.Entry(self.data_Entry)
+        self.BillNo_entry = ttk.Entry(self.data_Entry)
         self.BillNo_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.Rate_entry = tk.Entry(self.data_Entry)
+        self.Rate_entry = ttk.Entry(self.data_Entry)
         self.Rate_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.Bags_entry = tk.Entry(self.data_Entry)
+        self.Bags_entry = ttk.Entry(self.data_Entry)
         self.Bags_entry.grid(row=3, column=1, sticky=tk.W)
 
 
-        self.KGs_entry = tk.Entry(self.data_Entry)
+        self.KGs_entry = ttk.Entry(self.data_Entry)
         self.KGs_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.amount_entry = tk.Entry(self.data_Entry)
+        self.amount_entry = ttk.Entry(self.data_Entry)
         self.amount_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.Actual_entry = tk.Entry(self.data_Entry)
+        self.Actual_entry = ttk.Entry(self.data_Entry)
         self.Actual_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -1556,32 +1556,32 @@ class sdd(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         # #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=10, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=10, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=10, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=10, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=10, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=10, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=10, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=10, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=5, column=3, sticky=tk.NSEW)
+        self.calAmt_button = ttk.Button(self.data_Entry, text="Calculate", command=self.cal)
+        self.calAmt_button.grid(row=5, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset", command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset", command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.showex_button = tk.Button(parent, text="Show Excess-Less table", command=self.exls)
+        self.showex_button = ttk.Button(parent, text="Show Excess-Less table", command=self.exls)
         self.showex_button.place(relx=.8, rely=.2)
 
-        self.reset_button = tk.Button(self.data_Entry, text="Export", command=self.save1)
-        self.reset_button.grid(column=4, row=10, sticky=tk.NSEW)
+        self.reset_button = ttk.Button(self.data_Entry, text="Export", command=self.save1)
+        self.reset_button.grid(column=4, row=10, sticky=tk.NSEW, padx=3, pady=3)
 
     def save1(self):
         data = []
@@ -1615,17 +1615,17 @@ class sdd(ttk.Frame):
         self.to_entry1 = ttk.DateEntry(frame,
                             dateformat='%Y-%m-%d')
         self.to_entry1.grid(row=0, column=3, sticky=tk.W)
-        self.from_label1 = tk.Label(frame, text="From:")
+        self.from_label1 = ttk.Label(frame, text="From:")
         self.from_label1.grid(row=0, column= 0, sticky=tk.W)
 
-        self.to_label1 = tk.Label(frame, text="To:")
+        self.to_label1 = ttk.Label(frame, text="To:")
         self.to_label1.grid(row=0, column=2,sticky=tk.W)
 
-        self.findRange_button1 = tk.Button(frame, text="Find Range", command=self.rangeexl)
-        self.findRange_button1.grid(row=1, column=0, sticky=tk.W)
+        self.findRange_button1 = ttk.Button(frame, text="Find Range", command=self.rangeexl)
+        self.findRange_button1.grid(row=1, column=0, sticky=tk.W, padx=3, pady=3)
 
-        self.reset_button = tk.Button(frame, text="Export", command=self.save2)
-        self.reset_button.grid(column=1, row=1, sticky=tk.W)
+        self.reset_button = ttk.Button(frame, text="Export", command=self.save2)
+        self.reset_button.grid(column=1, row=1, sticky=tk.W, padx=3, pady=3)
 
 
         self.tree1 = ttk.Treeview(frame)
@@ -1735,7 +1735,7 @@ class sdd(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.BillNo_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.Rate_entry.delete(0, tk.END)
             self.Bags_entry.delete(0, tk.END)
             self.KGs_entry.delete(0, tk.END)
@@ -1746,7 +1746,7 @@ class sdd(ttk.Frame):
             self.Actual_entry.delete(0, tk.END)
             
             self.BillNo_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.Rate_entry.insert(0, values[3])
             self.Bags_entry.insert(0, values[4])
             self.KGs_entry.insert(0, values[5])
@@ -1772,7 +1772,7 @@ class sdd(ttk.Frame):
     def add(self):
         try:
             bill = int(self.BillNo_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1868,7 +1868,7 @@ class sdd(ttk.Frame):
 
     def update(self):
         bill = int(self.BillNo_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -1914,7 +1914,7 @@ class hdr(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Date', 'HRate', 'Husk', 'HuskAmt', 'DRate', \
                     'Dust' ,'DustAmt', 'RRate', 'Rejection','RejectionAmt', 'GRate', \
                         'Gbags', 'GbagAmt', 'Total')
@@ -1954,106 +1954,106 @@ class hdr(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.sl_label = tk.Label(self.data_Entry, text="Sl.no:")
+        self.sl_label = ttk.Label(self.data_Entry, text="Sl.no:")
         self.sl_label.grid(row=0, column=2, sticky='nsew')
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.HRate_label = tk.Label(self.data_Entry, text="Husk Rate:")
+        self.HRate_label = ttk.Label(self.data_Entry, text="Husk Rate:")
         self.HRate_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.Husk_label = tk.Label(self.data_Entry, text="Husk:")
+        self.Husk_label = ttk.Label(self.data_Entry, text="Husk:")
         self.Husk_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.HuskAmt_label = tk.Label(self.data_Entry, text="Husk Amount:")
+        self.HuskAmt_label = ttk.Label(self.data_Entry, text="Husk Amount:")
         self.HuskAmt_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.DRate_label = tk.Label(self.data_Entry, text="Dust Rate:")
+        self.DRate_label = ttk.Label(self.data_Entry, text="Dust Rate:")
         self.DRate_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.Dust_label = tk.Label(self.data_Entry, text="Dust:")
+        self.Dust_label = ttk.Label(self.data_Entry, text="Dust:")
         self.Dust_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.DustAmt_label = tk.Label(self.data_Entry, text="Dust Amount")
+        self.DustAmt_label = ttk.Label(self.data_Entry, text="Dust Amount")
         self.DustAmt_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.RRate_label = tk.Label(self.data_Entry, text = "Rejection Rate:")
+        self.RRate_label = ttk.Label(self.data_Entry, text = "Rejection Rate:")
         self.RRate_label.grid(row=7,column=0, sticky=tk.W)
 
-        self.Rej_label = tk.Label(self.data_Entry, text="Rejection:")
+        self.Rej_label = ttk.Label(self.data_Entry, text="Rejection:")
         self.Rej_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.RejAmt_label = tk.Label(self.data_Entry, text="Rejection Amount:")
+        self.RejAmt_label = ttk.Label(self.data_Entry, text="Rejection Amount:")
         self.RejAmt_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.GRate_label = tk.Label(self.data_Entry, text="Gunny Rate:")
+        self.GRate_label = ttk.Label(self.data_Entry, text="Gunny Rate:")
         self.GRate_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.Gbags_label = tk.Label(self.data_Entry, text="Gunny Bags:")
+        self.Gbags_label = ttk.Label(self.data_Entry, text="Gunny Bags:")
         self.Gbags_label.grid(row=11, column=0, sticky=tk.W)
 
-        self.GbagAmt_label = tk.Label(self.data_Entry, text="Gunny Amount:")
+        self.GbagAmt_label = ttk.Label(self.data_Entry, text="Gunny Amount:")
         self.GbagAmt_label.grid(row=12, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.sl_entry = tk.Entry(self.data_Entry)
+        self.sl_entry = ttk.Entry(self.data_Entry)
         self.sl_entry.grid(row=0, column=3, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=0, column=1, sticky=tk.W)
 
-        self.HRate_entry = tk.Entry(self.data_Entry)
+        self.HRate_entry = ttk.Entry(self.data_Entry)
         self.HRate_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.Husk_entry = tk.Entry(self.data_Entry)
+        self.Husk_entry = ttk.Entry(self.data_Entry)
         self.Husk_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.HuskAmt_entry = tk.Entry(self.data_Entry)
+        self.HuskAmt_entry = ttk.Entry(self.data_Entry)
         self.HuskAmt_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.DRate_entry = tk.Entry(self.data_Entry)
+        self.DRate_entry = ttk.Entry(self.data_Entry)
         self.DRate_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.Dust_entry = tk.Entry(self.data_Entry)
+        self.Dust_entry = ttk.Entry(self.data_Entry)
         self.Dust_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.DustAmt_entry = tk.Entry(self.data_Entry)
+        self.DustAmt_entry = ttk.Entry(self.data_Entry)
         self.DustAmt_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.RRate_entry = tk.Entry(self.data_Entry)
+        self.RRate_entry = ttk.Entry(self.data_Entry)
         self.RRate_entry.grid(row=7, column=1, sticky=tk.W)
         
-        self.Rej_entry = tk.Entry(self.data_Entry)
+        self.Rej_entry = ttk.Entry(self.data_Entry)
         self.Rej_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.RejAmt_entry = tk.Entry(self.data_Entry)
+        self.RejAmt_entry = ttk.Entry(self.data_Entry)
         self.RejAmt_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.GRate_entry = tk.Entry(self.data_Entry)
+        self.GRate_entry = ttk.Entry(self.data_Entry)
         self.GRate_entry.grid(row=10, column=1, sticky=tk.W)
 
-        self.Gbags_entry = tk.Entry(self.data_Entry)
+        self.Gbags_entry = ttk.Entry(self.data_Entry)
         self.Gbags_entry.grid(row=11, column=1, sticky=tk.W)
 
-        self.GbagAmt_entry = tk.Entry(self.data_Entry)
+        self.GbagAmt_entry = ttk.Entry(self.data_Entry)
         self.GbagAmt_entry.grid(row=12, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -2065,26 +2065,26 @@ class hdr(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.W)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.W, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -2137,7 +2137,7 @@ class hdr(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.sl_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.HRate_entry.delete(0, tk.END)
             self.Husk_entry.delete(0, tk.END)
             self.HuskAmt_entry.delete(0, tk.END)
@@ -2152,7 +2152,7 @@ class hdr(ttk.Frame):
             self.GbagAmt_entry.delete(0, tk.END)
             
             self.sl_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.HRate_entry.insert(0, values[2])
             self.Husk_entry.insert(0, values[3])
             self.HuskAmt_entry.insert(0, values[4])
@@ -2179,7 +2179,7 @@ class hdr(ttk.Frame):
         try:
             sl = int(self.sl_entry.get())
             hr = int(self.HRate_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -2215,8 +2215,6 @@ class hdr(ttk.Frame):
             self.collection.update_one(filter={'Sl': sl},update=\
                                 [{'$addFields': {'Total': {'$add': ['$HuskAmt', '$DustAmt','$RejectionAmt', '$GbagAmt']}}}])
             
-            print("Hello")
-            print(self.db, self.collection)
             self.reset()
             self.showall()
         except Exception as e:
@@ -2295,7 +2293,7 @@ class hdr(ttk.Frame):
     def update(self):
         sl = int(self.sl_entry.get())
         hr = int(self.HRate_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -2361,7 +2359,7 @@ class chart(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Month', 'Sales', 'Payment', 'TCS_TDS', 'Purchase','Receipt')
         self.tree.column("SL.No", width=50, minwidth=25)
         self.tree.column("Month", width=50, minwidth=25)
@@ -2384,39 +2382,39 @@ class chart(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Sales_label = tk.Label(self.data_Entry, text="Sales:")
+        self.Sales_label = ttk.Label(self.data_Entry, text="Sales:")
         self.Sales_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.Payment_label = tk.Label(self.data_Entry, text="Payment:")
+        self.Payment_label = ttk.Label(self.data_Entry, text="Payment:")
         self.Payment_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.tds_label = tk.Label(self.data_Entry, text="TCS/TDS:")
+        self.tds_label = ttk.Label(self.data_Entry, text="TCS/TDS:")
         self.tds_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.Purchase_label = tk.Label(self.data_Entry, text="Purchase:")
+        self.Purchase_label = ttk.Label(self.data_Entry, text="Purchase:")
         self.Purchase_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.Reciept_label = tk.Label(self.data_Entry, text="Receipt:")
+        self.Reciept_label = ttk.Label(self.data_Entry, text="Receipt:")
         self.Reciept_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
@@ -2424,19 +2422,19 @@ class chart(ttk.Frame):
         self.monthyear.grid(row=0, column=1)
 
 
-        self.Sales_entry = tk.Entry(self.data_Entry)
+        self.Sales_entry = ttk.Entry(self.data_Entry)
         self.Sales_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.Payment_entry = tk.Entry(self.data_Entry)
+        self.Payment_entry = ttk.Entry(self.data_Entry)
         self.Payment_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.tcs_entry = tk.Entry(self.data_Entry)
+        self.tcs_entry = ttk.Entry(self.data_Entry)
         self.tcs_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.Purchase_entry = tk.Entry(self.data_Entry)
+        self.Purchase_entry = ttk.Entry(self.data_Entry)
         self.Purchase_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.Receipt_entry = tk.Entry(self.data_Entry)
+        self.Receipt_entry = ttk.Entry(self.data_Entry)
         self.Receipt_entry.grid(row=6, column=1, sticky=tk.W)
 
         self.from_entry = MonthYearEntry(self.range_entry)
@@ -2446,26 +2444,26 @@ class chart(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -2619,7 +2617,7 @@ class ker(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'LotNo', 'TotalWholes', 'TotalPieces', 'TotalTotal', 'DispWholes', 'DispPieces', \
                     'DispRejection' ,'DispTotal', 'Party', 'PartyWholes','PartyPieces', 'PartyTotal')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -2654,91 +2652,91 @@ class ker(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        # self.range_entry = tk.LabelFrame(parent, text="Search")
+        # self.range_entry = ttk.LabelFrame(parent, text="Search")
         # self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.Lot_label = tk.Label(self.data_Entry, text="LotNo:")
+        self.Lot_label = ttk.Label(self.data_Entry, text="LotNo:")
         self.Lot_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.tw_label = tk.Label(self.data_Entry, text="Total Wholes:")
+        self.tw_label = ttk.Label(self.data_Entry, text="Total Wholes:")
         self.tw_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.tp_label = tk.Label(self.data_Entry, text="Total Pieces:")
+        self.tp_label = ttk.Label(self.data_Entry, text="Total Pieces:")
         self.tp_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.dw_label = tk.Label(self.data_Entry, text="Dispatched Wholes:")
+        self.dw_label = ttk.Label(self.data_Entry, text="Dispatched Wholes:")
         self.dw_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.dp_label = tk.Label(self.data_Entry, text="Dispatched Pieces:")
+        self.dp_label = ttk.Label(self.data_Entry, text="Dispatched Pieces:")
         self.dp_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.dr_label = tk.Label(self.data_Entry, text="Dispatched Rejection:")
+        self.dr_label = ttk.Label(self.data_Entry, text="Dispatched Rejection:")
         self.dr_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.pw_label = tk.Label(self.data_Entry, text="Party Wholes:")
+        self.pw_label = ttk.Label(self.data_Entry, text="Party Wholes:")
         self.pw_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.pp_label = tk.Label(self.data_Entry, text="Party Pieces:")
+        self.pp_label = ttk.Label(self.data_Entry, text="Party Pieces:")
         self.pp_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.lot_entry = tk.Entry(self.data_Entry)
+        self.lot_entry = ttk.Entry(self.data_Entry)
         self.lot_entry.grid(row=0, column=1, sticky=tk.W)
 
-        self.tw_entry = tk.Entry(self.data_Entry)
+        self.tw_entry = ttk.Entry(self.data_Entry)
         self.tw_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.tp_entry = tk.Entry(self.data_Entry)
+        self.tp_entry = ttk.Entry(self.data_Entry)
         self.tp_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.dw_entry = tk.Entry(self.data_Entry)
+        self.dw_entry = ttk.Entry(self.data_Entry)
         self.dw_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.dp_entry = tk.Entry(self.data_Entry)
+        self.dp_entry = ttk.Entry(self.data_Entry)
         self.dp_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.dr_entry = tk.Entry(self.data_Entry)
+        self.dr_entry = ttk.Entry(self.data_Entry)
         self.dr_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=6, column=1, sticky=tk.W)
         
-        self.pw_entry = tk.Entry(self.data_Entry)
+        self.pw_entry = ttk.Entry(self.data_Entry)
         self.pw_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.pp_entry = tk.Entry(self.data_Entry)
+        self.pp_entry = ttk.Entry(self.data_Entry)
         self.pp_entry.grid(row=8, column=1, sticky=tk.W)
 
         
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
     def save(self):
         data = []
@@ -2892,7 +2890,7 @@ class ss(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'BillNo', 'Date', 'Kernels', 'Shells', 'RCN', \
                     'Husk' ,'Dust')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -2917,64 +2915,64 @@ class ss(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.bill_label = tk.Label(self.data_Entry, text="Bill NO:")
+        self.bill_label = ttk.Label(self.data_Entry, text="Bill NO:")
         self.bill_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.ker_label = tk.Label(self.data_Entry, text="Kernels:")
+        self.ker_label = ttk.Label(self.data_Entry, text="Kernels:")
         self.ker_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.sh_label = tk.Label(self.data_Entry, text="Shells:")
+        self.sh_label = ttk.Label(self.data_Entry, text="Shells:")
         self.sh_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.rcn_label = tk.Label(self.data_Entry, text="R.C.Nuts:")
+        self.rcn_label = ttk.Label(self.data_Entry, text="R.C.Nuts:")
         self.rcn_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.husk_label = tk.Label(self.data_Entry, text="Husk:")
+        self.husk_label = ttk.Label(self.data_Entry, text="Husk:")
         self.husk_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.dust_label = tk.Label(self.data_Entry, text="Dust:")
+        self.dust_label = ttk.Label(self.data_Entry, text="Dust:")
         self.dust_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.bill_entry = tk.Entry(self.data_Entry)
+        self.bill_entry = ttk.Entry(self.data_Entry)
         self.bill_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.ker_entry = tk.Entry(self.data_Entry)
+        self.ker_entry = ttk.Entry(self.data_Entry)
         self.ker_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.sh_entry = tk.Entry(self.data_Entry)
+        self.sh_entry = ttk.Entry(self.data_Entry)
         self.sh_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.rcn_entry = tk.Entry(self.data_Entry)
+        self.rcn_entry = ttk.Entry(self.data_Entry)
         self.rcn_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.husk_entry = tk.Entry(self.data_Entry)
+        self.husk_entry = ttk.Entry(self.data_Entry)
         self.husk_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.dust_entry = tk.Entry(self.data_Entry)
+        self.dust_entry = ttk.Entry(self.data_Entry)
         self.dust_entry.grid(row=6, column=1, sticky=tk.W)
 
 
@@ -2987,26 +2985,26 @@ class ss(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -3044,7 +3042,7 @@ class ss(ttk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.bill_entry.delete(0, tk.END)
             self.husk_entry.delete(0, tk.END)
             self.dust_entry.delete(0, tk.END)
@@ -3054,7 +3052,7 @@ class ss(ttk.Frame):
             
             
             self.bill_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.ker_entry.insert(0, values[3])
             self.sh_entry.insert(0, values[4])
             self.rcn_entry.insert(0, values[5])
@@ -3065,7 +3063,7 @@ class ss(ttk.Frame):
         try:
             bill = int(self.bill_entry.get())
             k = int(self.ker_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3139,7 +3137,7 @@ class ss(ttk.Frame):
     def update(self):
         bill = int(self.bill_entry.get())
         k = int(self.ker_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3173,7 +3171,7 @@ class ps(tk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'BillNo', 'Date', 'Kernels', 'Shells', 'RCN', \
                     'Husk' ,'Dust')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -3198,64 +3196,64 @@ class ps(tk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.bill_label = tk.Label(self.data_Entry, text="Bill NO:")
+        self.bill_label = ttk.Label(self.data_Entry, text="Bill NO:")
         self.bill_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.ker_label = tk.Label(self.data_Entry, text="Kernels:")
+        self.ker_label = ttk.Label(self.data_Entry, text="Kernels:")
         self.ker_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.sh_label = tk.Label(self.data_Entry, text="Shells:")
+        self.sh_label = ttk.Label(self.data_Entry, text="Shells:")
         self.sh_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.rcn_label = tk.Label(self.data_Entry, text="R.C.Nuts:")
+        self.rcn_label = ttk.Label(self.data_Entry, text="R.C.Nuts:")
         self.rcn_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.husk_label = tk.Label(self.data_Entry, text="Husk:")
+        self.husk_label = ttk.Label(self.data_Entry, text="Husk:")
         self.husk_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.dust_label = tk.Label(self.data_Entry, text="Dust:")
+        self.dust_label = ttk.Label(self.data_Entry, text="Dust:")
         self.dust_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.bill_entry = tk.Entry(self.data_Entry)
+        self.bill_entry = ttk.Entry(self.data_Entry)
         self.bill_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.ker_entry = tk.Entry(self.data_Entry)
+        self.ker_entry = ttk.Entry(self.data_Entry)
         self.ker_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.sh_entry = tk.Entry(self.data_Entry)
+        self.sh_entry = ttk.Entry(self.data_Entry)
         self.sh_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.rcn_entry = tk.Entry(self.data_Entry)
+        self.rcn_entry = ttk.Entry(self.data_Entry)
         self.rcn_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.husk_entry = tk.Entry(self.data_Entry)
+        self.husk_entry = ttk.Entry(self.data_Entry)
         self.husk_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.dust_entry = tk.Entry(self.data_Entry)
+        self.dust_entry = ttk.Entry(self.data_Entry)
         self.dust_entry.grid(row=6, column=1, sticky=tk.W)
 
 
@@ -3268,26 +3266,26 @@ class ps(tk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -3325,7 +3323,7 @@ class ps(tk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.bill_entry.delete(0, tk.END)
             self.husk_entry.delete(0, tk.END)
             self.dust_entry.delete(0, tk.END)
@@ -3335,7 +3333,7 @@ class ps(tk.Frame):
             
             
             self.bill_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.ker_entry.insert(0, values[3])
             self.sh_entry.insert(0, values[4])
             self.rcn_entry.insert(0, values[5])
@@ -3346,7 +3344,7 @@ class ps(tk.Frame):
         try:
             bill = int(self.bill_entry.get())
             k = int(self.ker_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3420,7 +3418,7 @@ class ps(tk.Frame):
     def update(self):
         bill = int(self.bill_entry.get())
         k = int(self.ker_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3454,7 +3452,7 @@ class pa(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Lot', 'Date', 'RCNroast')
         self.tree.column("SL.No", width=50, minwidth=25)
         self.tree.column("Lot", width=80, minwidth=25)
@@ -3470,41 +3468,41 @@ class pa(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.bill_label = tk.Label(self.data_Entry, text="Lot NO:")
+        self.bill_label = ttk.Label(self.data_Entry, text="Lot NO:")
         self.bill_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.ker_label = tk.Label(self.data_Entry, text="RCN Roast:")
+        self.ker_label = ttk.Label(self.data_Entry, text="RCN Roast:")
         self.ker_label.grid(row=2, column=0, sticky=tk.W)
 
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 2, column=1, sticky=tk.W)
 
         #entry
-        self.lot_entry = tk.Entry(self.data_Entry)
+        self.lot_entry = ttk.Entry(self.data_Entry)
         self.lot_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.ros_entry = tk.Entry(self.data_Entry)
+        self.ros_entry = ttk.Entry(self.data_Entry)
         self.ros_entry.grid(row=2, column=1, sticky=tk.W)
 
 
@@ -3517,26 +3515,26 @@ class pa(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -3568,18 +3566,18 @@ class pa(ttk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.lot_entry.delete(0, tk.END)
             self.ros_entry.delete(0, tk.END)
             
             self.lot_entry.insert(0, values[1])
-            self.Date_entry.insert(0, values[2])
+            self.Date_entry.entry.insert(0, values[2])
             self.ros_entry.insert(0, values[3])
 
     def add(self):
         try:
             lot = int(self.lot_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3631,7 +3629,7 @@ class pa(ttk.Frame):
 
     def update(self):
         lot = int(self.lot_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3658,7 +3656,7 @@ class srcn(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Date', 'OSBStock', 'Purchase', 'Sales', \
                     'Production' ,'CSStock')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -3681,38 +3679,38 @@ class srcn(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.osb_label = tk.Label(self.data_Entry, text="OSBStock:")
+        self.osb_label = ttk.Label(self.data_Entry, text="OSBStock:")
         self.osb_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.pu_label = tk.Label(self.data_Entry, text="Purchase:")
+        self.pu_label = ttk.Label(self.data_Entry, text="Purchase:")
         self.pu_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.data_Entry, text="Sales:")
+        self.s_label = ttk.Label(self.data_Entry, text="Sales:")
         self.s_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.pr_label = tk.Label(self.data_Entry, text="Production:")
+        self.pr_label = ttk.Label(self.data_Entry, text="Production:")
         self.pr_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.css_label = tk.Label(self.data_Entry, text="CSStock:")
+        self.css_label = ttk.Label(self.data_Entry, text="CSStock:")
         self.css_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
@@ -3720,19 +3718,19 @@ class srcn(ttk.Frame):
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.osb_entry = tk.Entry(self.data_Entry)
+        self.osb_entry = ttk.Entry(self.data_Entry)
         self.osb_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.pu_entry = tk.Entry(self.data_Entry)
+        self.pu_entry = ttk.Entry(self.data_Entry)
         self.pu_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.s_entry = tk.Entry(self.data_Entry)
+        self.s_entry = ttk.Entry(self.data_Entry)
         self.s_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.pr_entry = tk.Entry(self.data_Entry)
+        self.pr_entry = ttk.Entry(self.data_Entry)
         self.pr_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.css_entry = tk.Entry(self.data_Entry)
+        self.css_entry = ttk.Entry(self.data_Entry)
         self.css_entry.grid(row=6, column=1, sticky=tk.W)
 
 
@@ -3745,26 +3743,26 @@ class srcn(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -3802,14 +3800,14 @@ class srcn(ttk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.osb_entry.delete(0, tk.END)
             self.pu_entry.delete(0, tk.END)
             self.s_entry.delete(0, tk.END)
             self.pr_entry.delete(0, tk.END)
             self.css_entry.delete(0, tk.END)
             
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.osb_entry.insert(0, values[2])
             self.pu_entry.insert(0, values[3])
             self.s_entry.insert(0, values[4])
@@ -3820,7 +3818,7 @@ class srcn(ttk.Frame):
         try:
             o = int(self.osb_entry.get())
             pu = int(self.pu_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3889,7 +3887,7 @@ class srcn(ttk.Frame):
     def update(self):
         o = int(self.osb_entry.get())
         pu = int(self.pu_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3908,7 +3906,7 @@ class srcn(ttk.Frame):
         self.showall()  
 
     def delete(self):
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -3924,7 +3922,7 @@ class sckn(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Date', 'OSBStock', 'Purchase', 'Sales', \
                     'Production' ,'CSStock')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -3947,38 +3945,38 @@ class sckn(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.osb_label = tk.Label(self.data_Entry, text="OSBStock:")
+        self.osb_label = ttk.Label(self.data_Entry, text="OSBStock:")
         self.osb_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.pu_label = tk.Label(self.data_Entry, text="Purchase:")
+        self.pu_label = ttk.Label(self.data_Entry, text="Purchase:")
         self.pu_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.data_Entry, text="Sales:")
+        self.s_label = ttk.Label(self.data_Entry, text="Sales:")
         self.s_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.pr_label = tk.Label(self.data_Entry, text="Production:")
+        self.pr_label = ttk.Label(self.data_Entry, text="Production:")
         self.pr_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.css_label = tk.Label(self.data_Entry, text="CSStock:")
+        self.css_label = ttk.Label(self.data_Entry, text="CSStock:")
         self.css_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
@@ -3986,19 +3984,19 @@ class sckn(ttk.Frame):
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.osb_entry = tk.Entry(self.data_Entry)
+        self.osb_entry = ttk.Entry(self.data_Entry)
         self.osb_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.pu_entry = tk.Entry(self.data_Entry)
+        self.pu_entry = ttk.Entry(self.data_Entry)
         self.pu_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.s_entry = tk.Entry(self.data_Entry)
+        self.s_entry = ttk.Entry(self.data_Entry)
         self.s_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.pr_entry = tk.Entry(self.data_Entry)
+        self.pr_entry = ttk.Entry(self.data_Entry)
         self.pr_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.css_entry = tk.Entry(self.data_Entry)
+        self.css_entry = ttk.Entry(self.data_Entry)
         self.css_entry.grid(row=6, column=1, sticky=tk.W)
 
 
@@ -4011,26 +4009,26 @@ class sckn(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
         
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.W)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.W, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -4068,14 +4066,14 @@ class sckn(ttk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.osb_entry.delete(0, tk.END)
             self.pu_entry.delete(0, tk.END)
             self.s_entry.delete(0, tk.END)
             self.pr_entry.delete(0, tk.END)
             self.css_entry.delete(0, tk.END)
             
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.osb_entry.insert(0, values[2])
             self.pu_entry.insert(0, values[3])
             self.s_entry.insert(0, values[4])
@@ -4086,7 +4084,7 @@ class sckn(ttk.Frame):
         try:
             o = int(self.osb_entry.get())
             pu = int(self.pu_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4155,7 +4153,7 @@ class sckn(ttk.Frame):
     def update(self):
         o = int(self.osb_entry.get())
         pu = int(self.pu_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4174,7 +4172,7 @@ class sckn(ttk.Frame):
         self.showall()  
 
     def delete(self):
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4190,7 +4188,7 @@ class psd(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
@@ -4221,82 +4219,82 @@ class psd(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.id_label = tk.Label(self.data_Entry, text="Id:")
+        self.id_label = ttk.Label(self.data_Entry, text="Id:")
         self.id_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.inv_label = tk.Label(self.data_Entry, text="INV.NO:")
+        self.inv_label = ttk.Label(self.data_Entry, text="INV.NO:")
         self.inv_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
+        self.qtyt_label = ttk.Label(self.data_Entry, text="Qty Type:")
         self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
+        self.amount_label = ttk.Label(self.data_Entry, text = "Amount:")
         self.amount_label.grid(row=6,column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.id_entry = tk.Entry(self.data_Entry)
+        self.id_entry = ttk.Entry(self.data_Entry)
         self.id_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.inv_entry = tk.Entry(self.data_Entry)
+        self.inv_entry = ttk.Entry(self.data_Entry)
         self.inv_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.qtyt_entry = tk.Entry(self.data_Entry)
+        self.qtyt_entry = ttk.Entry(self.data_Entry)
         self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.amount_entry = tk.Entry(self.data_Entry)
+        self.amount_entry = ttk.Entry(self.data_Entry)
         self.amount_entry.grid(row=6, column=1, sticky=tk.W)
         
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -4308,26 +4306,26 @@ class psd(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -4370,7 +4368,7 @@ class psd(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.id_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.inv_entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
@@ -4381,7 +4379,7 @@ class psd(ttk.Frame):
             self.IGST_entry.delete(0, tk.END)
             
             self.id_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.inv_entry.insert(0, values[3])
             self.Qty_entry.insert(0, values[4])
@@ -4395,7 +4393,7 @@ class psd(ttk.Frame):
     def add(self):
         try:
             id = int(self.id_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4475,7 +4473,7 @@ class psd(ttk.Frame):
 
     def update(self):
         id = int(self.id_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4507,7 +4505,7 @@ class sad(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Id', 'Date','Party', 'INVNo', 'Qty', 'QtyType',\
                                 'Amount', 'SGST', 'CGST','IGST', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
@@ -4538,82 +4536,82 @@ class sad(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.id_label = tk.Label(self.data_Entry, text="Id:")
+        self.id_label = ttk.Label(self.data_Entry, text="Id:")
         self.id_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.inv_label = tk.Label(self.data_Entry, text="INV.NO:")
+        self.inv_label = ttk.Label(self.data_Entry, text="INV.NO:")
         self.inv_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
+        self.qtyt_label = ttk.Label(self.data_Entry, text="Qty Type:")
         self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.amount_label = tk.Label(self.data_Entry, text = "Amount:")
+        self.amount_label = ttk.Label(self.data_Entry, text = "Amount:")
         self.amount_label.grid(row=6,column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.id_entry = tk.Entry(self.data_Entry)
+        self.id_entry = ttk.Entry(self.data_Entry)
         self.id_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.inv_entry = tk.Entry(self.data_Entry)
+        self.inv_entry = ttk.Entry(self.data_Entry)
         self.inv_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.qtyt_entry = tk.Entry(self.data_Entry)
+        self.qtyt_entry = ttk.Entry(self.data_Entry)
         self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.amount_entry = tk.Entry(self.data_Entry)
+        self.amount_entry = ttk.Entry(self.data_Entry)
         self.amount_entry.grid(row=6, column=1, sticky=tk.W)
         
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -4625,26 +4623,26 @@ class sad(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -4687,7 +4685,7 @@ class sad(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.id_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.inv_entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
@@ -4698,7 +4696,7 @@ class sad(ttk.Frame):
             self.IGST_entry.delete(0, tk.END)
             
             self.id_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.inv_entry.insert(0, values[3])
             self.Qty_entry.insert(0, values[4])
@@ -4712,7 +4710,7 @@ class sad(ttk.Frame):
     def add(self):
         try:
             id = int(self.id_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4792,7 +4790,7 @@ class sad(ttk.Frame):
 
     def update(self):
         id = int(self.id_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -4824,7 +4822,7 @@ class gstapp(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Date','scgst', 'ssgst', 'sigst', 'pcgst',\
                                 'psgst', 'pigst', 'Paid','PDate')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -4853,47 +4851,47 @@ class gstapp(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=0, column=0, sticky=tk.W)
         
-        self.scgst_label = tk.Label(self.data_Entry, text="Sales CGST:")
+        self.scgst_label = ttk.Label(self.data_Entry, text="Sales CGST:")
         self.scgst_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.ssgst_label = tk.Label(self.data_Entry, text="Sales SGST:")
+        self.ssgst_label = ttk.Label(self.data_Entry, text="Sales SGST:")
         self.ssgst_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.sigst_label = tk.Label(self.data_Entry, text="Sales IGST:")
+        self.sigst_label = ttk.Label(self.data_Entry, text="Sales IGST:")
         self.sigst_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.pcgst_label = tk.Label(self.data_Entry, text="Purchase CGST:")
+        self.pcgst_label = ttk.Label(self.data_Entry, text="Purchase CGST:")
         self.pcgst_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.psgst_label = tk.Label(self.data_Entry, text = "Purchase SGST:")
+        self.psgst_label = ttk.Label(self.data_Entry, text = "Purchase SGST:")
         self.psgst_label.grid(row=5,column=0, sticky=tk.W)
 
-        self.pigst_label = tk.Label(self.data_Entry, text="Purchase IGST:")
+        self.pigst_label = ttk.Label(self.data_Entry, text="Purchase IGST:")
         self.pigst_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.Paid_label = tk.Label(self.data_Entry, text="Paid:")
+        self.Paid_label = ttk.Label(self.data_Entry, text="Paid:")
         self.Paid_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.pdate_label = tk.Label(self.data_Entry, text="Paid Date:")
+        self.pdate_label = ttk.Label(self.data_Entry, text="Paid Date:")
         self.pdate_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
@@ -4902,25 +4900,25 @@ class gstapp(ttk.Frame):
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=0, column=1, sticky=tk.W)
         
-        self.scgst_entry = tk.Entry(self.data_Entry)
+        self.scgst_entry = ttk.Entry(self.data_Entry)
         self.scgst_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.ssgst_entry = tk.Entry(self.data_Entry)
+        self.ssgst_entry = ttk.Entry(self.data_Entry)
         self.ssgst_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.sigst_entry = tk.Entry(self.data_Entry)
+        self.sigst_entry = ttk.Entry(self.data_Entry)
         self.sigst_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.pcgst_entry = tk.Entry(self.data_Entry)
+        self.pcgst_entry = ttk.Entry(self.data_Entry)
         self.pcgst_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.psgst_entry = tk.Entry(self.data_Entry)
+        self.psgst_entry = ttk.Entry(self.data_Entry)
         self.psgst_entry.grid(row=5, column=1, sticky=tk.W)
         
-        self.pigst_entry = tk.Entry(self.data_Entry)
+        self.pigst_entry = ttk.Entry(self.data_Entry)
         self.pigst_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.Paid_entry = tk.Entry(self.data_Entry)
+        self.Paid_entry = ttk.Entry(self.data_Entry)
         self.Paid_entry.grid(row=7, column=1, sticky=tk.W)
 
         self.pd_entry = ttk.DateEntry(self.data_Entry,
@@ -4936,26 +4934,26 @@ class gstapp(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -5003,7 +5001,7 @@ class gstapp(ttk.Frame):
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
         if(values):
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.scgst_entry.delete(0, tk.END)
             self.ssgst_entry.delete(0, tk.END)
             self.sigst_entry.delete(0, tk.END)
@@ -5013,7 +5011,7 @@ class gstapp(ttk.Frame):
             self.Paid_entry.delete(0, tk.END)
             self.pd_entry.delete(0, tk.END)
             
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.scgst_entry.insert(0, values[2])
             self.ssgst_entry.insert(0, values[3])
             self.sigst_entry.insert(0, values[4])
@@ -5025,7 +5023,7 @@ class gstapp(ttk.Frame):
 
     def add(self):
         try:
-            datestr1 = self.Date_entry.get()
+            datestr1 = self.Date_entry.entry.get()
             if len(datestr1)<= 10:
                 datestr1 = datestr1+" 00:00:00"
             date1 = datetime.datetime.strptime(datestr1, '%Y-%m-%d 00:00:00')
@@ -5108,7 +5106,7 @@ class gstapp(ttk.Frame):
                                         ), tags= 'total')
 
     def update(self):
-        datestr1 = self.Date_entry.get()
+        datestr1 = self.Date_entry.entry.get()
         if len(datestr1)<= 10:
             datestr1 = datestr1+" 00:00:00"
         date1 = datetime.datetime.strptime(datestr1, '%Y-%m-%d 00:00:00')
@@ -5128,7 +5126,7 @@ class gstapp(ttk.Frame):
         self.showall()  
 
     def delete(self):
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -5144,7 +5142,7 @@ class cash(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('SL.No', 'Date', 'Party', 'Rate', 'Qty', 'QtyType',
                                 'Total')
         self.tree.column("SL.No", width=50, minwidth=25)
@@ -5167,58 +5165,58 @@ class cash(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.sl_label = tk.Label(self.data_Entry, text="Sl.NO:")
+        self.sl_label = ttk.Label(self.data_Entry, text="Sl.NO:")
         self.sl_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.r_label = tk.Label(self.data_Entry, text="Rate:")
+        self.r_label = ttk.Label(self.data_Entry, text="Rate:")
         self.r_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.qtyt_label = tk.Label(self.data_Entry, text="Qty Type:")
+        self.qtyt_label = ttk.Label(self.data_Entry, text="Qty Type:")
         self.qtyt_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.sl_entry = tk.Entry(self.data_Entry)
+        self.sl_entry = ttk.Entry(self.data_Entry)
         self.sl_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.r_entry = tk.Entry(self.data_Entry)
+        self.r_entry = ttk.Entry(self.data_Entry)
         self.r_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.qtyt_entry = tk.Entry(self.data_Entry)
+        self.qtyt_entry = ttk.Entry(self.data_Entry)
         self.qtyt_entry.grid(row=5, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -5230,26 +5228,26 @@ class cash(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=11, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=11, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=11, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=11, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=11, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=11, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=11, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=11, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=11, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -5285,14 +5283,14 @@ class cash(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.sl_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.r_entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
             self.qtyt_entry.delete(0, tk.END)
             
             self.sl_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.r_entry.insert(0, values[3])
             self.Qty_entry.insert(0, values[4])
@@ -5301,7 +5299,7 @@ class cash(ttk.Frame):
     def add(self):
         try:
             sl = int(self.sl_entry.get())
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -5363,7 +5361,7 @@ class cash(ttk.Frame):
 
     def update(self):
         sl = int(self.sl_entry.get())
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -5391,7 +5389,7 @@ class gstpsd(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',\
                                 'Purchase', 'CGST', 'SGST','IGST','RoundOff', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
@@ -5426,100 +5424,100 @@ class gstpsd(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="ID:")
+        self.i_label = ttk.Label(self.data_Entry, text="ID:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.v_label = tk.Label(self.data_Entry, text="Voucher No:")
+        self.v_label = ttk.Label(self.data_Entry, text="Voucher No:")
         self.v_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.g_label = tk.Label(self.data_Entry, text="GSTIN/UIN:")
+        self.g_label = ttk.Label(self.data_Entry, text="GSTIN/UIN:")
         self.g_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.u_label = tk.Label(self.data_Entry, text="Unit:")
+        self.u_label = ttk.Label(self.data_Entry, text="Unit:")
         self.u_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.pur_label = tk.Label(self.data_Entry, text = "Purchase:")
+        self.pur_label = ttk.Label(self.data_Entry, text = "Purchase:")
         self.pur_label.grid(row=7,column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.r_label = tk.Label(self.data_Entry, text="Round Off:")
+        self.r_label = ttk.Label(self.data_Entry, text="Round Off:")
         self.r_label.grid(row=11, column=0, sticky=tk.W)
 
-        self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
+        self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=12, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.v_entry = tk.Entry(self.data_Entry)
+        self.v_entry = ttk.Entry(self.data_Entry)
         self.v_entry.grid(row=3, column=1, sticky=tk.W)
         
-        self.g_entry = tk.Entry(self.data_Entry)
+        self.g_entry = ttk.Entry(self.data_Entry)
         self.g_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.u_entry = tk.Entry(self.data_Entry)
+        self.u_entry = ttk.Entry(self.data_Entry)
         self.u_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.pur_entry = tk.Entry(self.data_Entry)
+        self.pur_entry = ttk.Entry(self.data_Entry)
         self.pur_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=10, column=1, sticky=tk.W)
 
-        self.r_entry = tk.Entry(self.data_Entry)
+        self.r_entry = ttk.Entry(self.data_Entry)
         self.r_entry.grid(row=11, column=1, sticky=tk.W)
 
-        self.t_entry = tk.Entry(self.data_Entry)
+        self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=12, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -5531,26 +5529,26 @@ class gstpsd(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -5602,7 +5600,7 @@ class gstpsd(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.i_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.v_entry.delete(0, tk.END)
             self.g_entry.delete(0, tk.END)
@@ -5616,7 +5614,7 @@ class gstpsd(ttk.Frame):
             self.t_entry.delete(0, tk.END)
             
             self.i_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.v_entry.insert(0, values[3])
             self.g_entry.insert(0, values[4])
@@ -5632,7 +5630,7 @@ class gstpsd(ttk.Frame):
 
     def add(self):
         try:
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -5731,7 +5729,7 @@ class gstpsd(ttk.Frame):
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
 
     def update(self):
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -5770,7 +5768,7 @@ class gstsad(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',\
                                 'Sales', 'CGST', 'SGST','IGST','RoundOff', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
@@ -5805,100 +5803,100 @@ class gstsad(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="ID:")
+        self.i_label = ttk.Label(self.data_Entry, text="ID:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.Date_label = tk.Label(self.data_Entry, text="Date:")
+        self.Date_label = ttk.Label(self.data_Entry, text="Date:")
         self.Date_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.p_label = tk.Label(self.data_Entry, text="Party:")
+        self.p_label = ttk.Label(self.data_Entry, text="Party:")
         self.p_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.v_label = tk.Label(self.data_Entry, text="Voucher No:")
+        self.v_label = ttk.Label(self.data_Entry, text="Voucher No:")
         self.v_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.g_label = tk.Label(self.data_Entry, text="GSTIN/UIN:")
+        self.g_label = ttk.Label(self.data_Entry, text="GSTIN/UIN:")
         self.g_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.Qty_label = tk.Label(self.data_Entry, text="Quantity:")
+        self.Qty_label = ttk.Label(self.data_Entry, text="Quantity:")
         self.Qty_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.u_label = tk.Label(self.data_Entry, text="Unit:")
+        self.u_label = ttk.Label(self.data_Entry, text="Unit:")
         self.u_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.pur_label = tk.Label(self.data_Entry, text = "Sales:")
+        self.pur_label = ttk.Label(self.data_Entry, text = "Sales:")
         self.pur_label.grid(row=7,column=0, sticky=tk.W)
 
-        self.CGST_label = tk.Label(self.data_Entry, text="CGST:")
+        self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
         self.CGST_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.SGST_label = tk.Label(self.data_Entry, text="SGST:")
+        self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
         self.SGST_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.IGST_label = tk.Label(self.data_Entry, text="IGST:")
+        self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
         self.IGST_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.r_label = tk.Label(self.data_Entry, text="Round Off:")
+        self.r_label = ttk.Label(self.data_Entry, text="Round Off:")
         self.r_label.grid(row=11, column=0, sticky=tk.W)
 
-        self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
+        self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=12, column=0, sticky=tk.W)
 
-        self.from_label = tk.Label(self.range_entry, text="From:")
+        self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
-        self.to_label = tk.Label(self.range_entry, text="To:")
+        self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.W)
 
         self.Date_entry = ttk.DateEntry(self.data_Entry,
                             dateformat='%Y-%m-%d')
         self.Date_entry.grid(row=1, column=1, sticky=tk.W)
         
-        self.p_entry = tk.Entry(self.data_Entry)
+        self.p_entry = ttk.Entry(self.data_Entry)
         self.p_entry.grid(row=2, column=1, sticky=tk.W)
 
-        self.v_entry = tk.Entry(self.data_Entry)
+        self.v_entry = ttk.Entry(self.data_Entry)
         self.v_entry.grid(row=3, column=1, sticky=tk.W)
         
-        self.g_entry = tk.Entry(self.data_Entry)
+        self.g_entry = ttk.Entry(self.data_Entry)
         self.g_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.Qty_entry = tk.Entry(self.data_Entry)
+        self.Qty_entry = ttk.Entry(self.data_Entry)
         self.Qty_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.u_entry = tk.Entry(self.data_Entry)
+        self.u_entry = ttk.Entry(self.data_Entry)
         self.u_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.pur_entry = tk.Entry(self.data_Entry)
+        self.pur_entry = ttk.Entry(self.data_Entry)
         self.pur_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.CGST_entry = tk.Entry(self.data_Entry)
+        self.CGST_entry = ttk.Entry(self.data_Entry)
         self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.SGST_entry = tk.Entry(self.data_Entry)
+        self.SGST_entry = ttk.Entry(self.data_Entry)
         self.SGST_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.IGST_entry = tk.Entry(self.data_Entry)
+        self.IGST_entry = ttk.Entry(self.data_Entry)
         self.IGST_entry.grid(row=10, column=1, sticky=tk.W)
 
-        self.r_entry = tk.Entry(self.data_Entry)
+        self.r_entry = ttk.Entry(self.data_Entry)
         self.r_entry.grid(row=11, column=1, sticky=tk.W)
 
-        self.t_entry = tk.Entry(self.data_Entry)
+        self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=12, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
@@ -5910,26 +5908,26 @@ class gstsad(ttk.Frame):
         self.to_entry.grid(row=0, column=7, sticky=tk.W)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find Range", command=self.range)
-        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
+        self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
     def save(self):
         data = []
@@ -5981,7 +5979,7 @@ class gstsad(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.i_entry.delete(0, tk.END)
-            self.Date_entry.delete(0, tk.END)
+            self.Date_entry.entry.delete(0, tk.END)
             self.p_entry.delete(0, tk.END)
             self.v_entry.delete(0, tk.END)
             self.g_entry.delete(0, tk.END)
@@ -5995,7 +5993,7 @@ class gstsad(ttk.Frame):
             self.t_entry.delete(0, tk.END)
             
             self.i_entry.insert(0, values[0])
-            self.Date_entry.insert(0, values[1])
+            self.Date_entry.entry.insert(0, values[1])
             self.p_entry.insert(0, values[2])
             self.v_entry.insert(0, values[3])
             self.g_entry.insert(0, values[4])
@@ -6011,7 +6009,7 @@ class gstsad(ttk.Frame):
 
     def add(self):
         try:
-            datestr = self.Date_entry.get()
+            datestr = self.Date_entry.entry.get()
             if len(datestr)<= 10:
                 datestr = datestr+" 00:00:00"
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -6110,7 +6108,7 @@ class gstsad(ttk.Frame):
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
 
     def update(self):
-        datestr = self.Date_entry.get()
+        datestr = self.Date_entry.entry.get()
         if len(datestr)<= 10:
             datestr = datestr+" 00:00:00"
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
@@ -6149,9 +6147,10 @@ class conw(tk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7', 'Total')
+        
         self.tree.column("Container", width=50, minwidth=25)
         self.tree.column("Grade", width=130, minwidth=25)
         self.tree.column("GradeD", width=80, minwidth=25)
@@ -6180,141 +6179,141 @@ class conw(tk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.tt = tk.LabelFrame(parent, text ="Trip Date details")
+        self.tt = ttk.LabelFrame(parent, text ="Trip Date details")
         self.tt.grid(row=0, column=2, sticky='nw')
 
         self.text = tk.Text(self.tt, height=10, width=40)
         self.text.grid(row=0, column=0, sticky='nwew')
 
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
+        self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.g_label = tk.Label(self.data_Entry, text="Grade:")
+        self.g_label = ttk.Label(self.data_Entry, text="Grade:")
         self.g_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.gd_label = tk.Label(self.data_Entry, text="Sub Grade:")
+        self.gd_label = ttk.Label(self.data_Entry, text="Sub Grade:")
         self.gd_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.t1_label = tk.Label(self.data_Entry, text="Trip1:")
+        self.t1_label = ttk.Label(self.data_Entry, text="Trip1:")
         self.t1_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.t2_label = tk.Label(self.data_Entry, text="Trip2:")
+        self.t2_label = ttk.Label(self.data_Entry, text="Trip2:")
         self.t2_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.t3_label = tk.Label(self.data_Entry, text="Trip3:")
+        self.t3_label = ttk.Label(self.data_Entry, text="Trip3:")
         self.t3_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.t4_label = tk.Label(self.data_Entry, text="Trip4:")
+        self.t4_label = ttk.Label(self.data_Entry, text="Trip4:")
         self.t4_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.t5_label = tk.Label(self.data_Entry, text="Trip5:")
+        self.t5_label = ttk.Label(self.data_Entry, text="Trip5:")
         self.t5_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.t6_label = tk.Label(self.data_Entry, text="Trip6:")
+        self.t6_label = ttk.Label(self.data_Entry, text="Trip6:")
         self.t6_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.t7_label = tk.Label(self.data_Entry, text="Trip7:")
+        self.t7_label = ttk.Label(self.data_Entry, text="Trip7:")
         self.t7_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
+        self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label = ttk.Label(self.range_entry ,text = "Container:")
         self.con_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.range_entry, text="Grade:")
+        self.s_label = ttk.Label(self.range_entry, text="Grade:")
         self.s_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
+        self.s_label = ttk.Label(self.range_entry, text="Sub Grade:")
         self.s_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.W)
         
-        self.g_entry = tk.Entry(self.data_Entry)
+        self.g_entry = ttk.Entry(self.data_Entry)
         self.g_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.gd_entry = tk.Entry(self.data_Entry)
+        self.gd_entry = ttk.Entry(self.data_Entry)
         self.gd_entry.grid(row=2, column=1, sticky=tk.W)
         
-        self.t1_entry = tk.Entry(self.data_Entry)
+        self.t1_entry = ttk.Entry(self.data_Entry)
         self.t1_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.t2_entry = tk.Entry(self.data_Entry)
+        self.t2_entry = ttk.Entry(self.data_Entry)
         self.t2_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.t3_entry = tk.Entry(self.data_Entry)
+        self.t3_entry = ttk.Entry(self.data_Entry)
         self.t3_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.t4_entry = tk.Entry(self.data_Entry)
+        self.t4_entry = ttk.Entry(self.data_Entry)
         self.t4_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.t5_entry = tk.Entry(self.data_Entry)
+        self.t5_entry = ttk.Entry(self.data_Entry)
         self.t5_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.t6_entry = tk.Entry(self.data_Entry)
+        self.t6_entry = ttk.Entry(self.data_Entry)
         self.t6_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.t7_entry = tk.Entry(self.data_Entry)
+        self.t7_entry = ttk.Entry(self.data_Entry)
         self.t7_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.t_entry = tk.Entry(self.data_Entry)
+        self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
         
-        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry = ttk.Entry(self.range_entry)
         self.con_entry.grid(row=0, column=1)
         
-        self.findg_entry = tk.Entry(self.range_entry)
+        self.findg_entry = ttk.Entry(self.range_entry)
         self.findg_entry.grid(row=1, column=1)
 
-        self.findsg_entry = tk.Entry(self.range_entry)
+        self.findsg_entry = ttk.Entry(self.range_entry)
         self.findsg_entry.grid(row=2, column=1)
 
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button = ttk.Button(self.tt, text="Add", command=self.ad)
         # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=10, column=2, sticky=tk.NSEW)
+        self.calAmt_button = ttk.Button(self.data_Entry, text="Calculate", command=self.cal)
+        self.calAmt_button.grid(row=10, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
-        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
+        self.find_button = ttk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
-        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find", command=self.range)
+        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
-        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.reset()
 
@@ -6622,7 +6621,7 @@ class conp(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
                                 'Trip5', 'Trip6', 'Trip7', 'Total')
         self.tree.column("Container", width=50, minwidth=25)
@@ -6653,141 +6652,141 @@ class conp(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.tt = tk.LabelFrame(parent, text ="Trip Date details")
+        self.tt = ttk.LabelFrame(parent, text ="Trip Date details")
         self.tt.grid(row=0, column=2, sticky='nw')
 
         self.text = tk.Text(self.tt, height=10, width=40)
         self.text.grid(row=0, column=0, sticky='nwew')
 
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
+        self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.g_label = tk.Label(self.data_Entry, text="Grade:")
+        self.g_label = ttk.Label(self.data_Entry, text="Grade:")
         self.g_label.grid(row=1, column=0, sticky=tk.W)
         
-        self.gd_label = tk.Label(self.data_Entry, text="Sub Grade:")
+        self.gd_label = ttk.Label(self.data_Entry, text="Sub Grade:")
         self.gd_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.t1_label = tk.Label(self.data_Entry, text="Trip1:")
+        self.t1_label = ttk.Label(self.data_Entry, text="Trip1:")
         self.t1_label.grid(row=3, column=0, sticky=tk.W)
 
-        self.t2_label = tk.Label(self.data_Entry, text="Trip2:")
+        self.t2_label = ttk.Label(self.data_Entry, text="Trip2:")
         self.t2_label.grid(row=4, column=0, sticky=tk.W)
 
-        self.t3_label = tk.Label(self.data_Entry, text="Trip3:")
+        self.t3_label = ttk.Label(self.data_Entry, text="Trip3:")
         self.t3_label.grid(row=5, column=0, sticky=tk.W)
 
-        self.t4_label = tk.Label(self.data_Entry, text="Trip4:")
+        self.t4_label = ttk.Label(self.data_Entry, text="Trip4:")
         self.t4_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.t5_label = tk.Label(self.data_Entry, text="Trip5:")
+        self.t5_label = ttk.Label(self.data_Entry, text="Trip5:")
         self.t5_label.grid(row=7, column=0, sticky=tk.W)
 
-        self.t6_label = tk.Label(self.data_Entry, text="Trip6:")
+        self.t6_label = ttk.Label(self.data_Entry, text="Trip6:")
         self.t6_label.grid(row=8, column=0, sticky=tk.W)
 
-        self.t7_label = tk.Label(self.data_Entry, text="Trip7:")
+        self.t7_label = ttk.Label(self.data_Entry, text="Trip7:")
         self.t7_label.grid(row=9, column=0, sticky=tk.W)
 
-        self.t_label = tk.Label(self.data_Entry, text="Gross Total:")
+        self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
         self.t_label.grid(row=10, column=0, sticky=tk.W)
 
-        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label = ttk.Label(self.range_entry ,text = "Container:")
         self.con_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.range_entry, text="Grade:")
+        self.s_label = ttk.Label(self.range_entry, text="Grade:")
         self.s_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.s_label = tk.Label(self.range_entry, text="Sub Grade:")
+        self.s_label = ttk.Label(self.range_entry, text="Sub Grade:")
         self.s_label.grid(row=2, column=0, sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.W)
         
-        self.g_entry = tk.Entry(self.data_Entry)
+        self.g_entry = ttk.Entry(self.data_Entry)
         self.g_entry.grid(row=1, column=1, sticky=tk.W)
 
-        self.gd_entry = tk.Entry(self.data_Entry)
+        self.gd_entry = ttk.Entry(self.data_Entry)
         self.gd_entry.grid(row=2, column=1, sticky=tk.W)
         
-        self.t1_entry = tk.Entry(self.data_Entry)
+        self.t1_entry = ttk.Entry(self.data_Entry)
         self.t1_entry.grid(row=3, column=1, sticky=tk.W)
 
-        self.t2_entry = tk.Entry(self.data_Entry)
+        self.t2_entry = ttk.Entry(self.data_Entry)
         self.t2_entry.grid(row=4, column=1, sticky=tk.W)
 
-        self.t3_entry = tk.Entry(self.data_Entry)
+        self.t3_entry = ttk.Entry(self.data_Entry)
         self.t3_entry.grid(row=5, column=1, sticky=tk.W)
 
-        self.t4_entry = tk.Entry(self.data_Entry)
+        self.t4_entry = ttk.Entry(self.data_Entry)
         self.t4_entry.grid(row=6, column=1, sticky=tk.W)
 
-        self.t5_entry = tk.Entry(self.data_Entry)
+        self.t5_entry = ttk.Entry(self.data_Entry)
         self.t5_entry.grid(row=7, column=1, sticky=tk.W)
 
-        self.t6_entry = tk.Entry(self.data_Entry)
+        self.t6_entry = ttk.Entry(self.data_Entry)
         self.t6_entry.grid(row=8, column=1, sticky=tk.W)
 
-        self.t7_entry = tk.Entry(self.data_Entry)
+        self.t7_entry = ttk.Entry(self.data_Entry)
         self.t7_entry.grid(row=9, column=1, sticky=tk.W)
 
-        self.t_entry = tk.Entry(self.data_Entry)
+        self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
         
-        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry = ttk.Entry(self.range_entry)
         self.con_entry.grid(row=0, column=1)
         
-        self.findg_entry = tk.Entry(self.range_entry)
+        self.findg_entry = ttk.Entry(self.range_entry)
         self.findg_entry.grid(row=1, column=1)
 
-        self.findsg_entry = tk.Entry(self.range_entry)
+        self.findsg_entry = ttk.Entry(self.range_entry)
         self.findsg_entry.grid(row=2, column=1)
 
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button = ttk.Button(self.tt, text="Add", command=self.ad)
         # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.save_button = tk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW)
+        self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
+        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.calAmt_button = tk.Button(self.data_Entry, text="Calculate", command=self.cal)
-        self.calAmt_button.grid(row=10, column=2, sticky=tk.NSEW)
+        self.calAmt_button = ttk.Button(self.data_Entry, text="Calculate", command=self.cal)
+        self.calAmt_button.grid(row=10, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
-        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
+        self.find_button = ttk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.range)
-        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find", command=self.range)
+        self.findRange_button.grid(row=1, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.findRange_button = tk.Button(self.range_entry, text="Find", command=self.srange)
-        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW)
+        self.findRange_button = ttk.Button(self.range_entry, text="Find", command=self.srange)
+        self.findRange_button.grid(row=2, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.reset()
 
@@ -7095,7 +7094,7 @@ class cont(ttk.Frame):
         self.create_w(parent)
 
     def create_w(self, parent):
-        self.tree = ttk.Treeview(parent)
+        self.tree = ttk.Treeview(parent, bootstyle='info')
         self.tree['columns'] = ('Container')
         self.tree.column("Container", width=50, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
@@ -7105,56 +7104,56 @@ class cont(ttk.Frame):
         self.tree.update()
 
         #label frames
-        self.data_Entry = tk.LabelFrame(parent, text="Data Entry")
+        self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = tk.LabelFrame(parent, text="Search")
+        self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
         self.text = tk.Text(self.data_Entry, height=15, width=60)
         self.text.grid(row=1, column=1, sticky='nsew')
 
         #labels
-        self.i_label = tk.Label(self.data_Entry, text="Container No.:")
+        self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.i_label = tk.Label(self.data_Entry, text="Details:")
+        self.i_label = ttk.Label(self.data_Entry, text="Details:")
         self.i_label.grid(row=1, column=0, sticky=tk.W)
 
-        self.con_label = tk.Label(self.range_entry ,text = "Container:")
+        self.con_label = ttk.Label(self.range_entry ,text = "Container:")
         self.con_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.currnet_label = tk.Label(parent, text="Showing All")
+        self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
         #entry
-        self.i_entry = tk.Entry(self.data_Entry)
+        self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.NSEW)
         
-        self.con_entry = tk.Entry(self.range_entry)
+        self.con_entry = ttk.Entry(self.range_entry)
         self.con_entry.grid(row=0, column=1)
 
         #buttons
-        self.add_button = tk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=3, column=0, sticky=tk.NSEW)
+        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
+        self.add_button.grid(row=3, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        # self.ad_button = tk.Button(self.tt, text="Add", command=self.ad)
+        # self.ad_button = ttk.Button(self.tt, text="Add", command=self.ad)
         # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
 
-        self.update_button = tk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=3, column=1, sticky=tk.NSEW)
+        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
+        self.update_button.grid(row=3, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.delete_button = tk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=3, column=2, sticky=tk.NSEW)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=3, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.show_button = tk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=3, column=3, sticky=tk.NSEW)
+        self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
+        self.show_button.grid(row=3, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = tk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.place(relx=.90)
+        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
+        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
 
-        self.find_button = tk.Button(self.range_entry, text = "Find", command=self.find)
-        self.find_button.grid(row=0, column=2, sticky=tk.NSEW)
+        self.find_button = ttk.Button(self.range_entry, text = "Find", command=self.find)
+        self.find_button.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.reset()
 
@@ -7227,5 +7226,6 @@ class cont(ttk.Frame):
         self.showall()
 
 
-
-App()
+root = ttk.Window()
+app = App(root)
+root.mainloop()
