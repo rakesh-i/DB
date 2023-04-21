@@ -7098,7 +7098,7 @@ class cont(ttk.Frame):
         self.tree.column("Container", width=50, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
         self.tree.heading('Container', text='Container', anchor=tk.CENTER)
-        self.tree.place(x=0, rely=.60, relwidth=1, relheight=.40)
+        self.tree.place(x=0, rely=.30, relwidth=1, relheight=.70)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
 
@@ -7106,55 +7106,54 @@ class cont(ttk.Frame):
         self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
         self.data_Entry.grid(row=0, column=0, sticky=tk.W)
 
-        self.range_entry = ttk.LabelFrame(parent, text="Search")
-        self.range_entry.grid(row=0, column=1, sticky=tk.NW)
-
-        self.text = tk.Text(self.data_Entry, height=15, width=60)
-        self.text.grid(row=1, column=1, sticky='nsew')
-
         #labels
         self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
         self.i_label.grid(row=0, column=0, sticky=tk.W)
 
-        self.i_label = ttk.Label(self.data_Entry, text="Details:")
-        self.i_label.grid(row=1, column=0, sticky=tk.W)
-
-        self.con_label = ttk.Label(self.range_entry ,text = "Container:")
-        self.con_label.grid(row=0, column=0, sticky=tk.W)
-
         self.currnet_label = ttk.Label(parent, text="Showing All")
-        self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
+        self.currnet_label.grid(row = 1, column=1, sticky=tk.W)
 
         #entry
         self.i_entry = ttk.Entry(self.data_Entry)
         self.i_entry.grid(row=0, column=1, sticky=tk.NSEW)
         
-        self.con_entry = ttk.Entry(self.range_entry)
-        self.con_entry.grid(row=0, column=1)
 
         #buttons
-        self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=3, column=0, sticky=tk.NSEW, padx=3, pady=3)
+        self.create_button = Button(self.data_Entry, text="Create File", command=self.create_file)
+        self.create_button.grid(row=0, column=2, sticky=tk.NSEW, padx = 3)
 
-        # self.ad_button = ttk.Button(self.tt, text="Add", command=self.ad)
-        # self.ad_button.grid(row=1, column=0, sticky=tk.NSEW)
+        self.upload_button = Button(self.data_Entry, text="Add", command=self.upload_to_mongo)
+        self.upload_button.grid(row=1, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=3, column=1, sticky=tk.NSEW, padx=3, pady=3)
-
-        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=3, column=2, sticky=tk.NSEW, padx=3, pady=3)
+        self.open_button = Button(self.data_Entry, text="Open File", command=self.open_file)
+        self.open_button.grid(row=1, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
         self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=3, column=3, sticky=tk.NSEW, padx=3, pady=3)
+        self.show_button.grid(row=1, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
-        self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
+        self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
+        self.delete_button.grid(row=1, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
-        self.find_button = ttk.Button(self.range_entry, text = "Find", command=self.find)
-        self.find_button.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
+    def create_file(self):
+        file_name = self.i_entry.get()
+        df = pd.DataFrame()
+        df.to_excel(file_name + '.xlsx', index=False)
+        os.startfile(file_name + '.xlsx')
 
-        self.reset()
+    def upload_to_mongo(self):
+        file_name = self.i_entry.get()
+        with open(file_name + '.xlsx', 'rb') as file:
+            data = file.read()
+        self.collection.insert_one({'Con': file_name, 'file': data})
+        os.remove(file_name+'.xlsx')
+        self.showall()
+
+    def open_file(self):
+        file_name = self.i_entry.get()
+        data = self.collection.find_one({'Con': file_name})
+        with open(file_name + '.xlsx', 'wb') as file:
+            file.write(data['file'])
+        os.system('"c:/Program Files/LibreOffice/program/soffice.exe" --calc '  + file_name + '.xlsx')
 
     def showall(self):
         self.tree.delete(*self.tree.get_children())
@@ -7170,59 +7169,14 @@ class cont(ttk.Frame):
         values = self.tree.item(item, "values")
         if(values):
             self.i_entry.delete(0, tk.END)
-            self.text.delete('1.0', tk.END)
             
             self.i_entry.insert(0, values[0])
-    
-            query = {'Con':int(values[0])}
-            projection = {"Details":1}
-            data = self.collection.find_one(query,projection )
-            self.text.insert("1.0", data['Details'])
-            
-    def add(self):
-        try:
-            i = int(self.i_entry.get())
-            t = self.text.get("1.0", tk.END)
-            data = {'Con': i,'Details':t}
-            
-            self.collection.insert_one(data)
-            
-            self.reset()
-            self.showall()
-        except Exception as e:
-            messagebox.showerror('Error', e)
-
-    def reset(self):
-        self.i_entry.delete(0, tk.END)
-        self.text.delete('1.0', tk.END)
-            
-        self.i_entry.insert(0, 0)
-
-    def find(self):
-        self.tree.delete(*self.tree.get_children())
-        i = int(self.con_entry.get())
-        data = self.collection.find({"Con":i})
-        self.currnet_label.config(text="Showing Range")
-
-        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
-        
-        for i in data:
-            self.tree.insert('', 'end',values=(i['Con']))
-
-    def update(self):
-        i = int(self.i_entry.get())
-        t = self.text.get("1.0", tk.END)
-        data = {"Details":t}
-            
-        self.collection.update_one({'Con':i}, {'$set':data})
-        
-        self.showall()  
 
     def delete(self):
-        i = int(self.i_entry.get())
+        i = self.i_entry.get()
         self.collection.delete_one({'Con':i})
-        self.reset()
         self.showall()
+        os.remove(i+'.xlsx')
 
 
 root = ttk.Window()
