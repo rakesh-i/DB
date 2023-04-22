@@ -6147,35 +6147,54 @@ class conw(tk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent, bootstyle='info')
-        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
-                                'Trip5', 'Trip6', 'Trip7', 'Total')
+        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1','T1Date', 'Trip2','T2Date',
+                                'Trip3','T3Date', 'Trip4','T4Date',
+                                'Trip5','T5Date', 'Trip6','T6Date', 'Trip7','T7Date', 'Total')
         
-        self.tree.column("Container", width=50, minwidth=25)
-        self.tree.column("Grade", width=130, minwidth=25)
+        self.tree.column("Container", width=80, minwidth=25)
+        self.tree.column("Grade", width=80, minwidth=25)
         self.tree.column("GradeD", width=80, minwidth=25)
         self.tree.column("Trip1", width=80, minwidth=25)
+        self.tree.column("T1Date", width=80, minwidth=25)
         self.tree.column("Trip2", width=80, minwidth=25)
+        self.tree.column("T2Date", width=80, minwidth=25)
         self.tree.column("Trip3", width=80, minwidth=25)
+        self.tree.column("T3Date", width=80, minwidth=25)
         self.tree.column("Trip4", width=80, minwidth=25)
+        self.tree.column("T4Date", width=80, minwidth=25)
         self.tree.column("Trip5", width=80, minwidth=25)
+        self.tree.column("T5Date", width=80, minwidth=25)
         self.tree.column("Trip6", width=80, minwidth=25)
+        self.tree.column("T6Date", width=80, minwidth=25)
         self.tree.column("Trip7", width=80, minwidth=25)
+        self.tree.column("T7Date", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
         self.tree.heading('Container', text='Container', anchor=tk.CENTER)
         self.tree.heading('Grade', text='Grade')
         self.tree.heading('GradeD', text='Subgrade')
         self.tree.heading('Trip1', text='Trip1')
+        self.tree.heading('T1Date', text='Date')
         self.tree.heading('Trip2', text='Trip2')
+        self.tree.heading('T2Date', text='Date')
         self.tree.heading('Trip3', text='Trip3')
+        self.tree.heading('T3Date', text='Date')
         self.tree.heading('Trip4', text='Trip4')
+        self.tree.heading('T4Date', text='Date')
         self.tree.heading('Trip5', text='Trip5')
+        self.tree.heading('T5Date', text='Date')
         self.tree.heading('Trip6', text='Trip6')
+        self.tree.heading('T6Date', text='Date')
         self.tree.heading('Trip7', text='Trip7')
+        self.tree.heading('T7Date', text='Date')
         self.tree.heading('Total', text='Total')
-        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.50)
+        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.45)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
+
+        xscrollbar = ttk.Scrollbar(parent, orient=tk.HORIZONTAL, command=self.tree.xview)
+        xscrollbar.place(rely = .95, relwidth=1)
+        self.tree.configure(xscrollcommand=xscrollbar.set)
 
         #label frames
         self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
@@ -6184,11 +6203,6 @@ class conw(tk.Frame):
         self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.tt = ttk.LabelFrame(parent, text ="Trip Date details")
-        self.tt.grid(row=0, column=2, sticky='nw')
-
-        self.text = tk.Text(self.tt, height=10, width=40)
-        self.text.grid(row=0, column=0, sticky='nwew')
 
         #labels
         self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
@@ -6248,24 +6262,45 @@ class conw(tk.Frame):
         
         self.t1_entry = ttk.Entry(self.data_Entry)
         self.t1_entry.grid(row=3, column=1, sticky=tk.W)
+        self.d1_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d1_entry.grid(row=3, column=2, sticky=tk.W)
 
         self.t2_entry = ttk.Entry(self.data_Entry)
         self.t2_entry.grid(row=4, column=1, sticky=tk.W)
+        self.d2_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d2_entry.grid(row=4, column=2, sticky=tk.W)
 
         self.t3_entry = ttk.Entry(self.data_Entry)
         self.t3_entry.grid(row=5, column=1, sticky=tk.W)
+        self.d3_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d3_entry.grid(row=5, column=2, sticky=tk.W)
 
         self.t4_entry = ttk.Entry(self.data_Entry)
         self.t4_entry.grid(row=6, column=1, sticky=tk.W)
+        self.d4_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d4_entry.grid(row=6, column=2, sticky=tk.W)
 
         self.t5_entry = ttk.Entry(self.data_Entry)
         self.t5_entry.grid(row=7, column=1, sticky=tk.W)
+        self.d5_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d5_entry.grid(row=7, column=2, sticky=tk.W)
 
         self.t6_entry = ttk.Entry(self.data_Entry)
         self.t6_entry.grid(row=8, column=1, sticky=tk.W)
+        self.d6_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d6_entry.grid(row=8, column=2, sticky=tk.W)
 
         self.t7_entry = ttk.Entry(self.data_Entry)
         self.t7_entry.grid(row=9, column=1, sticky=tk.W)
+        self.d7_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d7_entry.grid(row=9, column=2, sticky=tk.W)
 
         self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
@@ -6333,8 +6368,9 @@ class conw(tk.Frame):
             values = self.tree.item(item)["values"]
             data.append(values)
         
-        df = pd.DataFrame(data, columns=['Con', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
-                                'Trip5', 'Trip6', 'Trip7','Total'])
+        df = pd.DataFrame(data, columns=['Container', 'Grade','GradeD', 'Trip1','T1Date', 'Trip2','T2Date',
+                                'Trip3','T3Date', 'Trip4','T4Date',
+                                'Trip5','T5Date', 'Trip6','T6Date', 'Trip7','T7Date', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
             df.to_excel(filename, index=False)
@@ -6350,12 +6386,19 @@ class conw(tk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
 
         pipeline = [{ "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
@@ -6368,9 +6411,10 @@ class conw(tk.Frame):
                                             "total":{"$sum":"$Total" }}}]
         result = self.collection.aggregate(pipeline)
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
         
     def click(self, event):
         item = self.tree.selection()[0]
@@ -6380,31 +6424,40 @@ class conw(tk.Frame):
             self.g_entry.delete(0, tk.END)
             self.gd_entry.delete(0, tk.END)
             self.t1_entry.delete(0, tk.END)
+            self.d1_entry.entry.delete(0, tk.END)
             self.t2_entry.delete(0, tk.END)
+            self.d2_entry.entry.delete(0, tk.END)
             self.t3_entry.delete(0, tk.END)
+            self.d3_entry.entry.delete(0, tk.END)
             self.t4_entry.delete(0, tk.END)
+            self.d4_entry.entry.delete(0, tk.END)
             self.t5_entry.delete(0, tk.END)
+            self.d5_entry.entry.delete(0, tk.END)
             self.t6_entry.delete(0, tk.END)
+            self.d6_entry.entry.delete(0, tk.END)
             self.t7_entry.delete(0, tk.END)
+            self.d7_entry.entry.delete(0, tk.END)
             self.t_entry.delete(0, tk.END)
-            self.text.delete('1.0', tk.END)
-            
+        
             self.i_entry.insert(0, values[0])
             self.g_entry.insert(0, values[1])
             self.gd_entry.insert(0, values[2])
             self.t1_entry.insert(0, values[3])
-            self.t2_entry.insert(0, values[4])
-            self.t3_entry.insert(0, values[5])
-            self.t4_entry.insert(0, values[6])
-            self.t5_entry.insert(0, values[7])
-            self.t6_entry.insert(0, values[8])
-            self.t7_entry.insert(0, values[9])
-            self.t_entry.insert(0, values[10])
+            self.d1_entry.entry.insert(0, values[4])
+            self.t2_entry.insert(0, values[5])
+            self.d2_entry.entry.insert(0, values[6])
+            self.t3_entry.insert(0, values[7])
+            self.d3_entry.entry.insert(0, values[8])
+            self.t4_entry.insert(0, values[9])
+            self.d4_entry.entry.insert(0, values[10])
+            self.t5_entry.insert(0, values[11])
+            self.d5_entry.entry.insert(0, values[12])
+            self.t6_entry.insert(0, values[13])
+            self.d6_entry.entry.insert(0, values[14])
+            self.t7_entry.insert(0, values[15])
+            self.d7_entry.entry.insert(0, values[16])
+            self.t_entry.insert(0, values[17])
 
-            query = {'GradeD':values[2]}
-            projection = {"Details":1}
-            data = self.collection.find_one(query,projection )
-            self.text.insert("1.0", data['Details'])
             
     def add(self):
         try:
@@ -6412,36 +6465,33 @@ class conw(tk.Frame):
             g = self.g_entry.get()
             gd = self.gd_entry.get()
             t1 = float(self.t1_entry.get())
+            d1 = self.d1_entry.entry.get()
             t2 = float(self.t2_entry.get())
+            d2 = self.d2_entry.entry.get()
             t3 = float(self.t3_entry.get())
+            d3 = self.d3_entry.entry.get()
             t4 = float(self.t4_entry.get())
+            d4 = self.d4_entry.entry.get()
             t5 = float(self.t5_entry.get())
+            d5 = self.d5_entry.entry.get()
             t6 = float(self.t6_entry.get())
+            d6 = self.d6_entry.entry.get()
             t7 = float(self.t7_entry.get())
+            d7 = self.d7_entry.entry.get()
             t = float(self.t_entry.get())
 
-            tt = self.text.get("1.0", tk.END)
-            da= {"Details":tt}
-            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
-                    'Trip3':t3, 'Trip4':t4,
-                    'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t, 'Details':tt }
+            
+            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1, 'd1':d1,
+                    'Trip2':t2,'d2':d2,
+                    'Trip3':t3,'d3':d3, 
+                    'Trip4':t4,'d4':d4,
+                    'Trip5':t5, 'd5':d5,
+                    "Trip6":t6,'d6':d6, 
+                    "Trip7": t7,'d7':d7,
+                    'Total':t }
             
             self.collection.insert_one(data)
             
-            self.showall()
-        except Exception as e:
-            messagebox.showerror('Error', e)
-
-    def ad(self):
-        try:
-            i = int(self.i_entry.get())
-            t = self.text.get("1.0", tk.END)
-            data = {"Details":t}
-            
-            self.collection.update_one({'Con':i}, {'$set':data})
-            
-            self.reset()
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
@@ -6452,25 +6502,38 @@ class conw(tk.Frame):
         self.g_entry.delete(0, tk.END)
         self.gd_entry.delete(0, tk.END)
         self.t1_entry.delete(0, tk.END)
+        self.d1_entry.entry.delete(0, tk.END)
         self.t2_entry.delete(0, tk.END)
+        self.d2_entry.entry.delete(0, tk.END)
         self.t3_entry.delete(0, tk.END)
+        self.d3_entry.entry.delete(0, tk.END)
         self.t4_entry.delete(0, tk.END)
+        self.d4_entry.entry.delete(0, tk.END)
         self.t5_entry.delete(0, tk.END)
+        self.d5_entry.entry.delete(0, tk.END)
         self.t6_entry.delete(0, tk.END)
+        self.d6_entry.entry.delete(0, tk.END)
         self.t7_entry.delete(0, tk.END)
+        self.d7_entry.entry.delete(0, tk.END)
         self.t_entry.delete(0, tk.END)
-        self.text.delete('1.0', tk.END)
             
         self.i_entry.insert(0, 0)
         self.g_entry.insert(0, 0)
         self.gd_entry.insert(0, 0)
         self.t1_entry.insert(0, 0)
+        self.d1_entry.entry.insert(0, 0)
         self.t2_entry.insert(0, 0)
+        self.d2_entry.entry.insert(0, 0)
         self.t3_entry.insert(0, 0)
+        self.d3_entry.entry.insert(0, 0)
         self.t4_entry.insert(0, 0)
+        self.d4_entry.entry.insert(0, 0)
         self.t5_entry.insert(0, 0)
+        self.d5_entry.entry.insert(0, 0)
         self.t6_entry.insert(0, 0)
+        self.d6_entry.entry.insert(0, 0)
         self.t7_entry.insert(0, 0)
+        self.d7_entry.entry.insert(0, 0)
         self.t_entry.insert(0, 0)
         
     def find(self):
@@ -6498,12 +6561,19 @@ class conw(tk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
@@ -6536,18 +6606,26 @@ class conw(tk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
 
     def srange(self):
         self.tree.delete(*self.tree.get_children())
@@ -6574,37 +6652,56 @@ class conw(tk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
 
     def update(self):
         i = int(self.i_entry.get())
         g = self.g_entry.get()
         gd = self.gd_entry.get()
         t1 = float(self.t1_entry.get())
+        d1 = self.d1_entry.entry.get()
         t2 = float(self.t2_entry.get())
+        d2 = self.d2_entry.entry.get()
         t3 = float(self.t3_entry.get())
+        d3 = self.d3_entry.entry.get()
         t4 = float(self.t4_entry.get())
+        d4 = self.d4_entry.entry.get()
         t5 = float(self.t5_entry.get())
+        d5 = self.d5_entry.entry.get()
         t6 = float(self.t6_entry.get())
+        d6 = self.d6_entry.entry.get()
         t7 = float(self.t7_entry.get())
+        d7 = self.d7_entry.entry.get()
         t = float(self.t_entry.get())
 
-        tt = self.text.get("1.0", tk.END)
-        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
-                    'Trip3':t3, 'Trip4':t4,
-                    'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t , 'Details':tt}})  
+        self.collection.update_one({"GradeD":gd}, {'$set':{'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1, 'd1':d1,
+                    'Trip2':t2,'d2':d2,
+                    'Trip3':t3,'d3':d3, 
+                    'Trip4':t4,'d4':d4,
+                    'Trip5':t5, 'd5':d5,
+                    "Trip6":t6,'d6':d6, 
+                    "Trip7": t7,'d7':d7,
+                    'Total':t }})  
+        self.showall()
 
     def delete(self):
         gd = self.gd_entry.get()
@@ -6612,7 +6709,7 @@ class conw(tk.Frame):
         self.reset()
         self.showall()
 
-class conp(ttk.Frame):
+class conp(tk.Frame):
     def __init__(self, parent, db, col):
         super().__init__(parent)
         self.db = client[db]
@@ -6621,34 +6718,54 @@ class conp(ttk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent, bootstyle='info')
-        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
-                                'Trip5', 'Trip6', 'Trip7', 'Total')
-        self.tree.column("Container", width=50, minwidth=25)
-        self.tree.column("Grade", width=130, minwidth=25)
+        self.tree['columns'] = ('Container', 'Grade','GradeD', 'Trip1','T1Date', 'Trip2','T2Date',
+                                'Trip3','T3Date', 'Trip4','T4Date',
+                                'Trip5','T5Date', 'Trip6','T6Date', 'Trip7','T7Date', 'Total')
+        
+        self.tree.column("Container", width=80, minwidth=25)
+        self.tree.column("Grade", width=80, minwidth=25)
         self.tree.column("GradeD", width=80, minwidth=25)
         self.tree.column("Trip1", width=80, minwidth=25)
+        self.tree.column("T1Date", width=80, minwidth=25)
         self.tree.column("Trip2", width=80, minwidth=25)
+        self.tree.column("T2Date", width=80, minwidth=25)
         self.tree.column("Trip3", width=80, minwidth=25)
+        self.tree.column("T3Date", width=80, minwidth=25)
         self.tree.column("Trip4", width=80, minwidth=25)
+        self.tree.column("T4Date", width=80, minwidth=25)
         self.tree.column("Trip5", width=80, minwidth=25)
+        self.tree.column("T5Date", width=80, minwidth=25)
         self.tree.column("Trip6", width=80, minwidth=25)
+        self.tree.column("T6Date", width=80, minwidth=25)
         self.tree.column("Trip7", width=80, minwidth=25)
+        self.tree.column("T7Date", width=80, minwidth=25)
         self.tree.column("Total", width=100, minwidth=25)
         self.tree.column('#0',width=0, stretch=tk.NO )
         self.tree.heading('Container', text='Container', anchor=tk.CENTER)
         self.tree.heading('Grade', text='Grade')
         self.tree.heading('GradeD', text='Subgrade')
         self.tree.heading('Trip1', text='Trip1')
+        self.tree.heading('T1Date', text='Date')
         self.tree.heading('Trip2', text='Trip2')
+        self.tree.heading('T2Date', text='Date')
         self.tree.heading('Trip3', text='Trip3')
+        self.tree.heading('T3Date', text='Date')
         self.tree.heading('Trip4', text='Trip4')
+        self.tree.heading('T4Date', text='Date')
         self.tree.heading('Trip5', text='Trip5')
+        self.tree.heading('T5Date', text='Date')
         self.tree.heading('Trip6', text='Trip6')
+        self.tree.heading('T6Date', text='Date')
         self.tree.heading('Trip7', text='Trip7')
+        self.tree.heading('T7Date', text='Date')
         self.tree.heading('Total', text='Total')
-        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.50)
+        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.45)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
+
+        xscrollbar = ttk.Scrollbar(parent, orient=tk.HORIZONTAL, command=self.tree.xview)
+        xscrollbar.place(rely = .95, relwidth=1)
+        self.tree.configure(xscrollcommand=xscrollbar.set)
 
         #label frames
         self.data_Entry = ttk.LabelFrame(parent, text="Data Entry")
@@ -6657,11 +6774,6 @@ class conp(ttk.Frame):
         self.range_entry = ttk.LabelFrame(parent, text="Search")
         self.range_entry.grid(row=0, column=1, sticky=tk.NW)
 
-        self.tt = ttk.LabelFrame(parent, text ="Trip Date details")
-        self.tt.grid(row=0, column=2, sticky='nw')
-
-        self.text = tk.Text(self.tt, height=10, width=40)
-        self.text.grid(row=0, column=0, sticky='nwew')
 
         #labels
         self.i_label = ttk.Label(self.data_Entry, text="Container No.:")
@@ -6721,24 +6833,45 @@ class conp(ttk.Frame):
         
         self.t1_entry = ttk.Entry(self.data_Entry)
         self.t1_entry.grid(row=3, column=1, sticky=tk.W)
+        self.d1_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d1_entry.grid(row=3, column=2, sticky=tk.W)
 
         self.t2_entry = ttk.Entry(self.data_Entry)
         self.t2_entry.grid(row=4, column=1, sticky=tk.W)
+        self.d2_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d2_entry.grid(row=4, column=2, sticky=tk.W)
 
         self.t3_entry = ttk.Entry(self.data_Entry)
         self.t3_entry.grid(row=5, column=1, sticky=tk.W)
+        self.d3_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d3_entry.grid(row=5, column=2, sticky=tk.W)
 
         self.t4_entry = ttk.Entry(self.data_Entry)
         self.t4_entry.grid(row=6, column=1, sticky=tk.W)
+        self.d4_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d4_entry.grid(row=6, column=2, sticky=tk.W)
 
         self.t5_entry = ttk.Entry(self.data_Entry)
         self.t5_entry.grid(row=7, column=1, sticky=tk.W)
+        self.d5_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d5_entry.grid(row=7, column=2, sticky=tk.W)
 
         self.t6_entry = ttk.Entry(self.data_Entry)
         self.t6_entry.grid(row=8, column=1, sticky=tk.W)
+        self.d6_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d6_entry.grid(row=8, column=2, sticky=tk.W)
 
         self.t7_entry = ttk.Entry(self.data_Entry)
         self.t7_entry.grid(row=9, column=1, sticky=tk.W)
+        self.d7_entry = ttk.DateEntry(self.data_Entry,
+                            dateformat='%Y-%m-%d')
+        self.d7_entry.grid(row=9, column=2, sticky=tk.W)
 
         self.t_entry = ttk.Entry(self.data_Entry)
         self.t_entry.grid(row=10, column=1, sticky=tk.W)
@@ -6806,8 +6939,9 @@ class conp(ttk.Frame):
             values = self.tree.item(item)["values"]
             data.append(values)
         
-        df = pd.DataFrame(data, columns=['Con', 'Grade','GradeD', 'Trip1', 'Trip2','Trip3', 'Trip4',
-                                'Trip5', 'Trip6', 'Trip7','Total'])
+        df = pd.DataFrame(data, columns=['Container', 'Grade','GradeD', 'Trip1','T1Date', 'Trip2','T2Date',
+                                'Trip3','T3Date', 'Trip4','T4Date',
+                                'Trip5','T5Date', 'Trip6','T6Date', 'Trip7','T7Date', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
             df.to_excel(filename, index=False)
@@ -6823,12 +6957,19 @@ class conp(ttk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
 
         pipeline = [{ "$group": { "_id": None, "total1": { "$sum": "$Trip1" }, 
@@ -6841,9 +6982,10 @@ class conp(ttk.Frame):
                                             "total":{"$sum":"$Total" }}}]
         result = self.collection.aggregate(pipeline)
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
         
     def click(self, event):
         item = self.tree.selection()[0]
@@ -6853,31 +6995,40 @@ class conp(ttk.Frame):
             self.g_entry.delete(0, tk.END)
             self.gd_entry.delete(0, tk.END)
             self.t1_entry.delete(0, tk.END)
+            self.d1_entry.entry.delete(0, tk.END)
             self.t2_entry.delete(0, tk.END)
+            self.d2_entry.entry.delete(0, tk.END)
             self.t3_entry.delete(0, tk.END)
+            self.d3_entry.entry.delete(0, tk.END)
             self.t4_entry.delete(0, tk.END)
+            self.d4_entry.entry.delete(0, tk.END)
             self.t5_entry.delete(0, tk.END)
+            self.d5_entry.entry.delete(0, tk.END)
             self.t6_entry.delete(0, tk.END)
+            self.d6_entry.entry.delete(0, tk.END)
             self.t7_entry.delete(0, tk.END)
+            self.d7_entry.entry.delete(0, tk.END)
             self.t_entry.delete(0, tk.END)
-            self.text.delete('1.0', tk.END)
-            
+        
             self.i_entry.insert(0, values[0])
             self.g_entry.insert(0, values[1])
             self.gd_entry.insert(0, values[2])
             self.t1_entry.insert(0, values[3])
-            self.t2_entry.insert(0, values[4])
-            self.t3_entry.insert(0, values[5])
-            self.t4_entry.insert(0, values[6])
-            self.t5_entry.insert(0, values[7])
-            self.t6_entry.insert(0, values[8])
-            self.t7_entry.insert(0, values[9])
-            self.t_entry.insert(0, values[10])
+            self.d1_entry.entry.insert(0, values[4])
+            self.t2_entry.insert(0, values[5])
+            self.d2_entry.entry.insert(0, values[6])
+            self.t3_entry.insert(0, values[7])
+            self.d3_entry.entry.insert(0, values[8])
+            self.t4_entry.insert(0, values[9])
+            self.d4_entry.entry.insert(0, values[10])
+            self.t5_entry.insert(0, values[11])
+            self.d5_entry.entry.insert(0, values[12])
+            self.t6_entry.insert(0, values[13])
+            self.d6_entry.entry.insert(0, values[14])
+            self.t7_entry.insert(0, values[15])
+            self.d7_entry.entry.insert(0, values[16])
+            self.t_entry.insert(0, values[17])
 
-            query = {'GradeD':values[2]}
-            projection = {"Details":1}
-            data = self.collection.find_one(query,projection )
-            self.text.insert("1.0", data['Details'])
             
     def add(self):
         try:
@@ -6885,36 +7036,33 @@ class conp(ttk.Frame):
             g = self.g_entry.get()
             gd = self.gd_entry.get()
             t1 = float(self.t1_entry.get())
+            d1 = self.d1_entry.entry.get()
             t2 = float(self.t2_entry.get())
+            d2 = self.d2_entry.entry.get()
             t3 = float(self.t3_entry.get())
+            d3 = self.d3_entry.entry.get()
             t4 = float(self.t4_entry.get())
+            d4 = self.d4_entry.entry.get()
             t5 = float(self.t5_entry.get())
+            d5 = self.d5_entry.entry.get()
             t6 = float(self.t6_entry.get())
+            d6 = self.d6_entry.entry.get()
             t7 = float(self.t7_entry.get())
+            d7 = self.d7_entry.entry.get()
             t = float(self.t_entry.get())
 
-            tt = self.text.get("1.0", tk.END)
-            da= {"Details":tt}
-            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
-                    'Trip3':t3, 'Trip4':t4,
-                    'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t, 'Details':tt }
+            
+            data = {'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1, 'd1':d1,
+                    'Trip2':t2,'d2':d2,
+                    'Trip3':t3,'d3':d3, 
+                    'Trip4':t4,'d4':d4,
+                    'Trip5':t5, 'd5':d5,
+                    "Trip6":t6,'d6':d6, 
+                    "Trip7": t7,'d7':d7,
+                    'Total':t }
             
             self.collection.insert_one(data)
             
-            self.showall()
-        except Exception as e:
-            messagebox.showerror('Error', e)
-
-    def ad(self):
-        try:
-            i = int(self.i_entry.get())
-            t = self.text.get("1.0", tk.END)
-            data = {"Details":t}
-            
-            self.collection.update_one({'Con':i}, {'$set':data})
-            
-            self.reset()
             self.showall()
         except Exception as e:
             messagebox.showerror('Error', e)
@@ -6925,25 +7073,38 @@ class conp(ttk.Frame):
         self.g_entry.delete(0, tk.END)
         self.gd_entry.delete(0, tk.END)
         self.t1_entry.delete(0, tk.END)
+        self.d1_entry.entry.delete(0, tk.END)
         self.t2_entry.delete(0, tk.END)
+        self.d2_entry.entry.delete(0, tk.END)
         self.t3_entry.delete(0, tk.END)
+        self.d3_entry.entry.delete(0, tk.END)
         self.t4_entry.delete(0, tk.END)
+        self.d4_entry.entry.delete(0, tk.END)
         self.t5_entry.delete(0, tk.END)
+        self.d5_entry.entry.delete(0, tk.END)
         self.t6_entry.delete(0, tk.END)
+        self.d6_entry.entry.delete(0, tk.END)
         self.t7_entry.delete(0, tk.END)
+        self.d7_entry.entry.delete(0, tk.END)
         self.t_entry.delete(0, tk.END)
-        self.text.delete('1.0', tk.END)
             
         self.i_entry.insert(0, 0)
         self.g_entry.insert(0, 0)
         self.gd_entry.insert(0, 0)
         self.t1_entry.insert(0, 0)
+        self.d1_entry.entry.insert(0, 0)
         self.t2_entry.insert(0, 0)
+        self.d2_entry.entry.insert(0, 0)
         self.t3_entry.insert(0, 0)
+        self.d3_entry.entry.insert(0, 0)
         self.t4_entry.insert(0, 0)
+        self.d4_entry.entry.insert(0, 0)
         self.t5_entry.insert(0, 0)
+        self.d5_entry.entry.insert(0, 0)
         self.t6_entry.insert(0, 0)
+        self.d6_entry.entry.insert(0, 0)
         self.t7_entry.insert(0, 0)
+        self.d7_entry.entry.insert(0, 0)
         self.t_entry.insert(0, 0)
         
     def find(self):
@@ -6971,12 +7132,19 @@ class conp(ttk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
@@ -7009,18 +7177,26 @@ class conp(ttk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
 
     def srange(self):
         self.tree.delete(*self.tree.get_children())
@@ -7047,38 +7223,57 @@ class conp(ttk.Frame):
                                                i['Grade'], 
                                                i['GradeD'],
                                                i['Trip1'], 
+                                               i['d1'], 
                                                i['Trip2'], 
+                                               i['d2'], 
                                                i['Trip3'],
+                                               i['d3'], 
                                                i['Trip4'], 
+                                               i['d4'], 
                                                i['Trip5'], 
+                                               i['d5'], 
                                                i['Trip6'], 
+                                               i['d6'], 
                                                i['Trip7'],
+                                               i['d7'], 
                                                i['Total']))
         
         for j in result:
-            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],
-                                        j['total2'], j['total3'], j['total4'],
-                                        j['total5'], j['total6'],j['total7'], j['total']), tags= 'total')
+            self.tree.insert('', 'end',values=('Total',  0, 0, j['total1'],0,
+                                        j['total2'], 0, j['total3'],0,  j['total4'],0,
+                                        j['total5'], 0, j['total6'],0,
+                                          j['total7'],0, j['total']), tags= 'total')
 
     def update(self):
         i = int(self.i_entry.get())
         g = self.g_entry.get()
         gd = self.gd_entry.get()
         t1 = float(self.t1_entry.get())
+        d1 = self.d1_entry.entry.get()
         t2 = float(self.t2_entry.get())
+        d2 = self.d2_entry.entry.get()
         t3 = float(self.t3_entry.get())
+        d3 = self.d3_entry.entry.get()
         t4 = float(self.t4_entry.get())
+        d4 = self.d4_entry.entry.get()
         t5 = float(self.t5_entry.get())
+        d5 = self.d5_entry.entry.get()
         t6 = float(self.t6_entry.get())
+        d6 = self.d6_entry.entry.get()
         t7 = float(self.t7_entry.get())
+        d7 = self.d7_entry.entry.get()
         t = float(self.t_entry.get())
 
-        tt = self.text.get("1.0", tk.END)
-        self.collection.update_one({"GradeD":gd}, {'$set':{'Con':i,'Grade':g, 'GradeD': gd, 'Trip1':t1,'Trip2':t2,
-                    'Trip3':t3, 'Trip4':t4,
-                    'Trip5':t5, "Trip6":t6, "Trip7": t7,
-                    'Total':t , 'Details':tt}}) 
-
+        self.collection.update_one({"GradeD":gd}, {'$set':{'Con': i,'Grade':g, 'GradeD': gd, 'Trip1':t1, 'd1':d1,
+                    'Trip2':t2,'d2':d2,
+                    'Trip3':t3,'d3':d3, 
+                    'Trip4':t4,'d4':d4,
+                    'Trip5':t5, 'd5':d5,
+                    "Trip6":t6,'d6':d6, 
+                    "Trip7": t7,'d7':d7,
+                    'Total':t }})  
+        self.showall()
+        
     def delete(self):
         gd = self.gd_entry.get()
         self.collection.delete_one({'GradeD':gd})
@@ -7121,6 +7316,9 @@ class cont(ttk.Frame):
         #buttons
         self.create_button = Button(self.data_Entry, text="Create File", command=self.create_file)
         self.create_button.grid(row=0, column=2, sticky=tk.NSEW, padx = 3)
+
+        self.create_button = Button(self.data_Entry, text="Update", command=self.upadte)
+        self.create_button.grid(row=0, column=3, sticky=tk.NSEW, padx = 3)
 
         self.upload_button = Button(self.data_Entry, text="Add", command=self.upload_to_mongo)
         self.upload_button.grid(row=1, column=0, sticky=tk.NSEW, padx=3, pady=3)
@@ -7171,6 +7369,15 @@ class cont(ttk.Frame):
             self.i_entry.delete(0, tk.END)
             
             self.i_entry.insert(0, values[0])
+
+    def upadte(self):
+        i = self.i_entry.get()
+        with open(i + '.xlsx', 'rb') as file:
+            data = file.read()
+        self.collection.update_one({"Con":i}, {'$set':{'Con':i,'file':data}}) 
+        os.remove(i+'.xlsx')
+        self.showall()
+
 
     def delete(self):
         i = self.i_entry.get()

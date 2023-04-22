@@ -742,15 +742,14 @@ db = client["Container"]
 db.create_collection("Total", validator={
       "$jsonSchema": {
         "bsonType": "object",
-        "required": ["Con", "Details"],
+        "required": ["Con", "file"],
         "properties": {
           "Con": {
             "bsonType": "int",
             "description": "must be an integer and is required"
           },
-          "Details": {
-            "bsonType": "string",
-            "description": "must be a string and is required"
+          "file": {
+            "bsonType": "binData"
           }
         }
       }
@@ -767,14 +766,20 @@ db.create_collection("Wholes", validator={
           "Grade",
           "GradeD",
           "Trip1",
+          "d1",
           "Trip2",
+          "d2",
           "Trip3",
+          "d3",
           "Trip4",
+          "d4",
           "Trip5",
+          "d5",
           "Trip6",
+          "d6",
           "Trip7",
-          "Total", 
-          'Details'
+          "d7",
+          "Total"
         ],
         "properties": {
           "Con": {
@@ -792,11 +797,17 @@ db.create_collection("Wholes", validator={
               "int"
             ]
           },
+          "d1": {
+            "bsonType": "string"
+          },
           "Trip2": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d2": {
+            "bsonType": "string"
           },
           "Trip3": {
             "bsonType": [
@@ -804,11 +815,17 @@ db.create_collection("Wholes", validator={
               "int"
             ]
           },
+          "d3": {
+            "bsonType": "string"
+          },
           "Trip4": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d4": {
+            "bsonType": "string"
           },
           "Trip5": {
             "bsonType": [
@@ -816,11 +833,17 @@ db.create_collection("Wholes", validator={
               "int"
             ]
           },
+          "d5": {
+            "bsonType": "string"
+          },
           "Trip6": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d6": {
+            "bsonType": "string"
           },
           "Trip7": {
             "bsonType": [
@@ -828,14 +851,14 @@ db.create_collection("Wholes", validator={
               "int"
             ]
           },
+          "d7": {
+            "bsonType": "string"
+          },
           "Total": {
             "bsonType": [
               "double",
               "int"
             ]
-          },
-          "Details": {
-            "bsonType": 'string'
           }
         }
       }
@@ -852,14 +875,20 @@ db.create_collection("Pieces", validator={
           "Grade",
           "GradeD",
           "Trip1",
+          "d1",
           "Trip2",
+          "d2",
           "Trip3",
+          "d3",
           "Trip4",
+          "d4",
           "Trip5",
+          "d5",
           "Trip6",
+          "d6",
           "Trip7",
-          "Total", 
-          'Details'
+          "d7",
+          "Total"
         ],
         "properties": {
           "Con": {
@@ -877,11 +906,17 @@ db.create_collection("Pieces", validator={
               "int"
             ]
           },
+          "d1": {
+            "bsonType": "string"
+          },
           "Trip2": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d2": {
+            "bsonType": "string"
           },
           "Trip3": {
             "bsonType": [
@@ -889,11 +924,17 @@ db.create_collection("Pieces", validator={
               "int"
             ]
           },
+          "d3": {
+            "bsonType": "string"
+          },
           "Trip4": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d4": {
+            "bsonType": "string"
           },
           "Trip5": {
             "bsonType": [
@@ -901,11 +942,17 @@ db.create_collection("Pieces", validator={
               "int"
             ]
           },
+          "d5": {
+            "bsonType": "string"
+          },
           "Trip6": {
             "bsonType": [
               "double",
               "int"
             ]
+          },
+          "d6": {
+            "bsonType": "string"
           },
           "Trip7": {
             "bsonType": [
@@ -913,14 +960,14 @@ db.create_collection("Pieces", validator={
               "int"
             ]
           },
+          "d7": {
+            "bsonType": "string"
+          },
           "Total": {
             "bsonType": [
               "double",
               "int"
             ]
-          },
-          "Details": {
-            "bsonType": 'string'
           }
         }
       }
