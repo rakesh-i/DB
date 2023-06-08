@@ -5389,7 +5389,7 @@ class gstpsd(ttk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent, bootstyle='info')
-        self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',\
+        self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit','RCN','CKN',
                                 'Purchase', 'CGST', 'SGST','IGST','RoundOff', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
         self.tree.column("Date", width=130, minwidth=25)
@@ -5398,6 +5398,8 @@ class gstpsd(ttk.Frame):
         self.tree.column("GSTIN", width=80, minwidth=25)
         self.tree.column("Qty", width=80, minwidth=25)
         self.tree.column("Unit", width=80, minwidth=25)
+        self.tree.column("RCN", width=80, minwidth=25)
+        self.tree.column("CKN", width=80, minwidth=25)
         self.tree.column("Purchase", width=80, minwidth=25)
         self.tree.column("SGST", width=80, minwidth=25)
         self.tree.column("CGST", width=80, minwidth=25)
@@ -5412,13 +5414,15 @@ class gstpsd(ttk.Frame):
         self.tree.heading('GSTIN', text='GSTIN/UIN')
         self.tree.heading('Qty', text='QTY')
         self.tree.heading('Unit', text='Unit')
+        self.tree.heading('RCN', text='RCN')
+        self.tree.heading('CKN', text='CKN')
         self.tree.heading('Purchase', text='Purchase')
         self.tree.heading('SGST', text='SGST')
         self.tree.heading('CGST', text='CGST')
         self.tree.heading('IGST', text='IGST')
         self.tree.heading('RoundOff', text='RoundOff')
         self.tree.heading('Total', text='Total')
-        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.50)
+        self.tree.place(x=0, rely=.70, relwidth=1, relheight=.30)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
 
@@ -5451,30 +5455,36 @@ class gstpsd(ttk.Frame):
         self.u_label = ttk.Label(self.data_Entry, text="Unit:")
         self.u_label.grid(row=6, column=0, sticky=tk.W)
 
+        self.rc_label = ttk.Label(self.data_Entry, text="RCN:")
+        self.rc_label.grid(row=7, column=0, sticky=tk.W)
+
+        self.ck_label = ttk.Label(self.data_Entry, text="CKN:")
+        self.ck_label.grid(row=8, column=0, sticky=tk.W)
+
         self.pur_label = ttk.Label(self.data_Entry, text = "Purchase:")
-        self.pur_label.grid(row=7,column=0, sticky=tk.W)
+        self.pur_label.grid(row=9,column=0, sticky=tk.W)
 
         self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
-        self.CGST_label.grid(row=8, column=0, sticky=tk.W)
+        self.CGST_label.grid(row=10, column=0, sticky=tk.W)
 
         self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
-        self.SGST_label.grid(row=9, column=0, sticky=tk.W)
+        self.SGST_label.grid(row=11, column=0, sticky=tk.W)
 
         self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
-        self.IGST_label.grid(row=10, column=0, sticky=tk.W)
+        self.IGST_label.grid(row=12, column=0, sticky=tk.W)
 
         self.r_label = ttk.Label(self.data_Entry, text="Round Off:")
-        self.r_label.grid(row=11, column=0, sticky=tk.W)
+        self.r_label.grid(row=13, column=0, sticky=tk.W)
 
         self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
-        self.t_label.grid(row=12, column=0, sticky=tk.W)
+        self.t_label.grid(row=14, column=0, sticky=tk.W)
 
         self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
         self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
-
+        
         self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
@@ -5501,23 +5511,29 @@ class gstpsd(ttk.Frame):
         self.u_entry = ttk.Entry(self.data_Entry)
         self.u_entry.grid(row=6, column=1, sticky=tk.W)
 
+        self.rc_entry = ttk.Entry(self.data_Entry)
+        self.rc_entry.grid(row=7, column=1, sticky=tk.W)
+
+        self.ck_entry = ttk.Entry(self.data_Entry)
+        self.ck_entry.grid(row=8, column=1, sticky=tk.W)
+
         self.pur_entry = ttk.Entry(self.data_Entry)
-        self.pur_entry.grid(row=7, column=1, sticky=tk.W)
+        self.pur_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.CGST_entry = ttk.Entry(self.data_Entry)
-        self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
+        self.CGST_entry.grid(row=10, column=1, sticky=tk.W)
 
         self.SGST_entry = ttk.Entry(self.data_Entry)
-        self.SGST_entry.grid(row=9, column=1, sticky=tk.W)
+        self.SGST_entry.grid(row=11, column=1, sticky=tk.W)
 
         self.IGST_entry = ttk.Entry(self.data_Entry)
-        self.IGST_entry.grid(row=10, column=1, sticky=tk.W)
+        self.IGST_entry.grid(row=12, column=1, sticky=tk.W)
 
         self.r_entry = ttk.Entry(self.data_Entry)
-        self.r_entry.grid(row=11, column=1, sticky=tk.W)
+        self.r_entry.grid(row=13, column=1, sticky=tk.W)
 
         self.t_entry = ttk.Entry(self.data_Entry)
-        self.t_entry.grid(row=12, column=1, sticky=tk.W)
+        self.t_entry.grid(row=14, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
                             dateformat='%Y-%m-%d')
@@ -5529,22 +5545,25 @@ class gstpsd(ttk.Frame):
 
         #buttons
         self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
+        self.add_button.grid(row=15, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
         self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
+        self.update_button.grid(row=15, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
         self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
+        self.delete_button.grid(row=15, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
+        self.show_button.grid(row=15, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
         self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
+        self.save_button.grid(row=15, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
         self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
         self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
+
+        self.p_button = ttk.Button(self.data_Entry ,text = "Search", command=self.search)
+        self.p_button.grid(row = 2, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
         self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
@@ -5554,7 +5573,8 @@ class gstpsd(ttk.Frame):
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',
+        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'VNo', 'GSTIN',
+        'Qty', 'Unit','RCN','CKN',
                                 'Purchase', 'CGST', 'SGST','IGST','RoundOff', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
@@ -5573,7 +5593,9 @@ class gstpsd(ttk.Frame):
                                                i['VoucherNo'], 
                                                i['GSTIN_UIN'], 
                                                i['Qty'],
-                                               i['Unit'], 
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
                                                i['Purchase'], 
                                                i['CGST'], 
                                                i['SGST'],
@@ -5581,7 +5603,9 @@ class gstpsd(ttk.Frame):
                                                i['RoundOff'],
                                                i['Total']))
 
-        pipeline = [{ "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
+        pipeline = [{ "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
                                             "totalp": { "$sum": "$Purchase" },
                                             "totalSGST":{"$sum":"$SGST" },
                                             "totalCGST":{ "$sum": "$CGST" }, 
@@ -5591,7 +5615,9 @@ class gstpsd(ttk.Frame):
         result = self.collection.aggregate(pipeline)
         for j in result:
             self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
-                                        0,j['totalp'], j['totalCGST'], j['totalSGST'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
         
     def click(self, event):
@@ -5605,6 +5631,8 @@ class gstpsd(ttk.Frame):
             self.g_entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
             self.u_entry.delete(0, tk.END)
+            self.rc_entry.delete(0, tk.END)
+            self.ck_entry.delete(0, tk.END)
             self.pur_entry.delete(0, tk.END)
             self.SGST_entry.delete(0, tk.END)
             self.CGST_entry.delete(0, tk.END)
@@ -5619,13 +5647,14 @@ class gstpsd(ttk.Frame):
             self.g_entry.insert(0, values[4])
             self.Qty_entry.insert(0, values[5])
             self.u_entry.insert(0, values[6])
-            self.pur_entry.insert(0, values[7])
-            self.CGST_entry.insert(0, values[8])
-            self.SGST_entry.insert(0, values[9])
-            self.IGST_entry.insert(0, values[10])
-            self.r_entry.insert(0, values[11])
-            self.t_entry.insert(0, values[12])
-
+            self.rc_entry.insert(0, values[7])
+            self.ck_entry.insert(0, values[8])
+            self.pur_entry.insert(0, values[9])
+            self.CGST_entry.insert(0, values[10])
+            self.SGST_entry.insert(0, values[11])
+            self.IGST_entry.insert(0, values[12])
+            self.r_entry.insert(0, values[13])
+            self.t_entry.insert(0, values[14])
 
     def add(self):
         try:
@@ -5635,6 +5664,8 @@ class gstpsd(ttk.Frame):
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
             i = int(self.i_entry.get())
             qty = float(self.Qty_entry.get())
+            rc = float(self.rc_entry.get())
+            ck = float(self.ck_entry.get())
             u = self.u_entry.get()
             v = self.v_entry.get()
             g = self.g_entry.get()
@@ -5646,7 +5677,7 @@ class gstpsd(ttk.Frame):
             r = float(self.r_entry.get())
             t = float(self.t_entry.get())
             data = {'Id':i,'Date':date, 'Party': p, 'VoucherNo':v,'GSTIN_UIN':g,
-                    'Qty':qty, 'Unit':u,
+                    'Qty':qty, 'Unit':u, 'RCN':rc, 'CKN':ck,
                     'Purchase':pur, "CGST":cgst, "SGST": sgst, "IGST":igst,
                      'RoundOff':r, 'Total':t }
             
@@ -5664,6 +5695,8 @@ class gstpsd(ttk.Frame):
         self.g_entry.delete(0, tk.END)
         self.Qty_entry.delete(0, tk.END)
         self.u_entry.delete(0, tk.END)
+        self.rc_entry.delete(0, tk.END)
+        self.ck_entry.delete(0, tk.END)
         self.pur_entry.delete(0, tk.END)
         self.SGST_entry.delete(0, tk.END)
         self.CGST_entry.delete(0, tk.END)
@@ -5677,6 +5710,8 @@ class gstpsd(ttk.Frame):
         self.g_entry.insert(0, 0)
         self.Qty_entry.insert(0, 0)
         self.u_entry.insert(0, 0)
+        self.rc_entry.insert(0, 0)
+        self.ck_entry.insert(0, 0)
         self.pur_entry.insert(0, 0)
         self.CGST_entry.insert(0, 0)
         self.SGST_entry.insert(0, 0)
@@ -5695,15 +5730,17 @@ class gstpsd(ttk.Frame):
         data = self.collection.find({"Date":{'$gte':fd, '$lte':td}}).sort("Date",1)
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"Date":{'$gte':fd, '$lte':td}}},\
-                    { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
+        pipeline = [{"$match":{"Date":{'$gte':fd, '$lte':td}}},
+            { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
                                             "totalp": { "$sum": "$Purchase" },
                                             "totalSGST":{"$sum":"$SGST" },
                                             "totalCGST":{ "$sum": "$CGST" }, 
                                             "totalIGST":{"$sum":"$IGST"}, 
                                             "totalr":{"$sum":"$RoundOff"},
                                             "total":{"$sum":"$Total" }}}]
-        result =  self.collection.aggregate(pipeline)
+        result = self.collection.aggregate(pipeline)
 
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
@@ -5714,7 +5751,9 @@ class gstpsd(ttk.Frame):
                                                i['VoucherNo'], 
                                                i['GSTIN_UIN'], 
                                                i['Qty'],
-                                               i['Unit'], 
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
                                                i['Purchase'], 
                                                i['CGST'], 
                                                i['SGST'],
@@ -5724,7 +5763,53 @@ class gstpsd(ttk.Frame):
         
         for j in result:
             self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
-                                        0,j['totalp'], j['totalCGST'], j['totalSGST'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
+                                        j['totalIGST'], j['totalr'], j['total']), tags= 'total')
+
+    def search(self):
+        self.tree.delete(*self.tree.get_children())
+        party = self.p_entry.get()
+        data = self.collection.find({"Party":party}).sort("Date",1)
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"Party":party}},
+            { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
+                                            "totalp": { "$sum": "$Purchase" },
+                                            "totalSGST":{"$sum":"$SGST" },
+                                            "totalCGST":{ "$sum": "$CGST" }, 
+                                            "totalIGST":{"$sum":"$IGST"}, 
+                                            "totalr":{"$sum":"$RoundOff"},
+                                            "total":{"$sum":"$Total" }}}]
+        result = self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Id'], 
+                                               i['Date'], 
+                                               i['Party'],
+                                               i['VoucherNo'], 
+                                               i['GSTIN_UIN'], 
+                                               i['Qty'],
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
+                                               i['Purchase'], 
+                                               i['CGST'], 
+                                               i['SGST'],
+                                               i['IGST'],
+                                               i['RoundOff'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
 
     def update(self):
@@ -5734,6 +5819,8 @@ class gstpsd(ttk.Frame):
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
         i = int(self.i_entry.get())
         qty = float(self.Qty_entry.get())
+        rc = float(self.rc_entry.get())
+        ck = float(self.ck_entry.get())
         u = self.u_entry.get()
         v = self.v_entry.get()
         g = self.g_entry.get()
@@ -5744,13 +5831,10 @@ class gstpsd(ttk.Frame):
         igst = float(self.IGST_entry.get())
         r = float(self.r_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"Id": i}, {'$set':{'Id':i,
-                    'Date':date, 'Party': p, 
-                    'VoucherNo':v,'GSTIN_UIN':g,
-                    'Qty':qty, 'Unit':u,
-                    'Purchase':pur, "CGST":cgst, 
-                    "SGST": sgst, "IGST":igst,
-                    'RoundOff':r, 'Total':t }}) 
+        self.collection.update_one({"Id": i}, {'$set':{'Id':i,'Date':date, 'Party': p, 'VoucherNo':v,'GSTIN_UIN':g,
+                    'Qty':qty, 'Unit':u, 'RCN':rc, 'CKN':ck,
+                    'Purchase':pur, "CGST":cgst, "SGST": sgst, "IGST":igst,
+                     'RoundOff':r, 'Total':t}}) 
         self.showall()  
 
     def delete(self):
@@ -5768,8 +5852,8 @@ class gstsad(ttk.Frame):
 
     def create_w(self, parent):
         self.tree = ttk.Treeview(parent, bootstyle='info')
-        self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',\
-                                'Sales', 'CGST', 'SGST','IGST','RoundOff', 'Total')
+        self.tree['columns'] = ('Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit','RCN','CKN',
+                                'Purchase', 'CGST', 'SGST','IGST','RoundOff', 'Total')
         self.tree.column("Id", width=50, minwidth=25)
         self.tree.column("Date", width=130, minwidth=25)
         self.tree.column("Party", width=80, minwidth=25)
@@ -5777,7 +5861,9 @@ class gstsad(ttk.Frame):
         self.tree.column("GSTIN", width=80, minwidth=25)
         self.tree.column("Qty", width=80, minwidth=25)
         self.tree.column("Unit", width=80, minwidth=25)
-        self.tree.column("Sales", width=80, minwidth=25)
+        self.tree.column("RCN", width=80, minwidth=25)
+        self.tree.column("CKN", width=80, minwidth=25)
+        self.tree.column("Purchase", width=80, minwidth=25)
         self.tree.column("SGST", width=80, minwidth=25)
         self.tree.column("CGST", width=80, minwidth=25)
         self.tree.column("IGST", width=80, minwidth=25)
@@ -5791,13 +5877,15 @@ class gstsad(ttk.Frame):
         self.tree.heading('GSTIN', text='GSTIN/UIN')
         self.tree.heading('Qty', text='QTY')
         self.tree.heading('Unit', text='Unit')
-        self.tree.heading('Sales', text='Sales')
+        self.tree.heading('RCN', text='RCN')
+        self.tree.heading('CKN', text='CKN')
+        self.tree.heading('Purchase', text='Purchase')
         self.tree.heading('SGST', text='SGST')
         self.tree.heading('CGST', text='CGST')
         self.tree.heading('IGST', text='IGST')
         self.tree.heading('RoundOff', text='RoundOff')
         self.tree.heading('Total', text='Total')
-        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.50)
+        self.tree.place(x=0, rely=.70, relwidth=1, relheight=.30)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
 
@@ -5830,30 +5918,36 @@ class gstsad(ttk.Frame):
         self.u_label = ttk.Label(self.data_Entry, text="Unit:")
         self.u_label.grid(row=6, column=0, sticky=tk.W)
 
-        self.pur_label = ttk.Label(self.data_Entry, text = "Sales:")
-        self.pur_label.grid(row=7,column=0, sticky=tk.W)
+        self.rc_label = ttk.Label(self.data_Entry, text="RCN:")
+        self.rc_label.grid(row=7, column=0, sticky=tk.W)
+
+        self.ck_label = ttk.Label(self.data_Entry, text="CKN:")
+        self.ck_label.grid(row=8, column=0, sticky=tk.W)
+
+        self.pur_label = ttk.Label(self.data_Entry, text = "Purchase:")
+        self.pur_label.grid(row=9,column=0, sticky=tk.W)
 
         self.CGST_label = ttk.Label(self.data_Entry, text="CGST:")
-        self.CGST_label.grid(row=8, column=0, sticky=tk.W)
+        self.CGST_label.grid(row=10, column=0, sticky=tk.W)
 
         self.SGST_label = ttk.Label(self.data_Entry, text="SGST:")
-        self.SGST_label.grid(row=9, column=0, sticky=tk.W)
+        self.SGST_label.grid(row=11, column=0, sticky=tk.W)
 
         self.IGST_label = ttk.Label(self.data_Entry, text="IGST:")
-        self.IGST_label.grid(row=10, column=0, sticky=tk.W)
+        self.IGST_label.grid(row=12, column=0, sticky=tk.W)
 
         self.r_label = ttk.Label(self.data_Entry, text="Round Off:")
-        self.r_label.grid(row=11, column=0, sticky=tk.W)
+        self.r_label.grid(row=13, column=0, sticky=tk.W)
 
         self.t_label = ttk.Label(self.data_Entry, text="Gross Total:")
-        self.t_label.grid(row=12, column=0, sticky=tk.W)
+        self.t_label.grid(row=14, column=0, sticky=tk.W)
 
         self.from_label = ttk.Label(self.range_entry, text="From:")
         self.from_label.grid(row=0, column= 4, sticky=tk.W)
 
         self.to_label = ttk.Label(self.range_entry, text="To:")
         self.to_label.grid(row=0, column=6,sticky=tk.W)
-
+        
         self.currnet_label = ttk.Label(parent, text="Showing All")
         self.currnet_label.grid(row = 0, column=1, sticky=tk.W)
 
@@ -5880,23 +5974,29 @@ class gstsad(ttk.Frame):
         self.u_entry = ttk.Entry(self.data_Entry)
         self.u_entry.grid(row=6, column=1, sticky=tk.W)
 
+        self.rc_entry = ttk.Entry(self.data_Entry)
+        self.rc_entry.grid(row=7, column=1, sticky=tk.W)
+
+        self.ck_entry = ttk.Entry(self.data_Entry)
+        self.ck_entry.grid(row=8, column=1, sticky=tk.W)
+
         self.pur_entry = ttk.Entry(self.data_Entry)
-        self.pur_entry.grid(row=7, column=1, sticky=tk.W)
+        self.pur_entry.grid(row=9, column=1, sticky=tk.W)
 
         self.CGST_entry = ttk.Entry(self.data_Entry)
-        self.CGST_entry.grid(row=8, column=1, sticky=tk.W)
+        self.CGST_entry.grid(row=10, column=1, sticky=tk.W)
 
         self.SGST_entry = ttk.Entry(self.data_Entry)
-        self.SGST_entry.grid(row=9, column=1, sticky=tk.W)
+        self.SGST_entry.grid(row=11, column=1, sticky=tk.W)
 
         self.IGST_entry = ttk.Entry(self.data_Entry)
-        self.IGST_entry.grid(row=10, column=1, sticky=tk.W)
+        self.IGST_entry.grid(row=12, column=1, sticky=tk.W)
 
         self.r_entry = ttk.Entry(self.data_Entry)
-        self.r_entry.grid(row=11, column=1, sticky=tk.W)
+        self.r_entry.grid(row=13, column=1, sticky=tk.W)
 
         self.t_entry = ttk.Entry(self.data_Entry)
-        self.t_entry.grid(row=12, column=1, sticky=tk.W)
+        self.t_entry.grid(row=14, column=1, sticky=tk.W)
 
         self.from_entry = ttk.DateEntry(self.range_entry,
                             dateformat='%Y-%m-%d')
@@ -5908,22 +6008,25 @@ class gstsad(ttk.Frame):
 
         #buttons
         self.add_button = ttk.Button(self.data_Entry, text="Add", command=self.add)
-        self.add_button.grid(row=13, column=0, sticky=tk.NSEW, padx=3, pady=3)
+        self.add_button.grid(row=15, column=0, sticky=tk.NSEW, padx=3, pady=3)
 
         self.update_button = ttk.Button(self.data_Entry, text="Update", command=self.update)
-        self.update_button.grid(row=13, column=1, sticky=tk.NSEW, padx=3, pady=3)
+        self.update_button.grid(row=15, column=1, sticky=tk.NSEW, padx=3, pady=3)
 
         self.delete_button = ttk.Button(self.data_Entry, text="Delete", command=self.delete)
-        self.delete_button.grid(row=13, column=2, sticky=tk.NSEW, padx=3, pady=3)
+        self.delete_button.grid(row=15, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.show_button = ttk.Button(self.data_Entry, text="Show All", command=self.showall)
-        self.show_button.grid(row=13, column=3, sticky=tk.NSEW, padx=3, pady=3)
+        self.show_button.grid(row=15, column=3, sticky=tk.NSEW, padx=3, pady=3)
 
         self.save_button = ttk.Button(self.data_Entry, text="Export", command=self.save)
-        self.save_button.grid(row=13, column=4, sticky=tk.NSEW, padx=3, pady=3)
+        self.save_button.grid(row=15, column=4, sticky=tk.NSEW, padx=3, pady=3)
 
         self.reset_button = ttk.Button(parent, text="Reset",command=self.reset)
         self.reset_button.grid(row=0, column=4, sticky=tk.NE, padx=20)
+
+        self.p_button = ttk.Button(self.data_Entry ,text = "Search", command=self.search)
+        self.p_button.grid(row = 2, column=2, sticky=tk.NSEW, padx=3, pady=3)
 
         self.findRange_button = ttk.Button(self.range_entry, text="Find Range", command=self.range)
         self.findRange_button.grid(row=1, column=4, sticky=tk.NSEW, padx=3, pady=3)
@@ -5933,8 +6036,9 @@ class gstsad(ttk.Frame):
         for item in self.tree.get_children():
             values = self.tree.item(item)["values"]
             data.append(values)
-        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'VNo', 'GSTIN','Qty', 'Unit',
-                                'Sales', 'CGST', 'SGST','IGST','RoundOff', 'Total'])
+        df = pd.DataFrame(data, columns=['Id', 'Date','Party', 'VNo', 'GSTIN',
+        'Qty', 'Unit','RCN','CKN',
+                                'Purchase', 'CGST', 'SGST','IGST','RoundOff', 'Total'])
         filename = filedialog.asksaveasfilename(defaultextension='.xlsx')
         if filename:
             df.to_excel(filename, index=False)
@@ -5952,16 +6056,20 @@ class gstsad(ttk.Frame):
                                                i['VoucherNo'], 
                                                i['GSTIN_UIN'], 
                                                i['Qty'],
-                                               i['Unit'], 
-                                               i['Sales'], 
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
+                                               i['Purchase'], 
                                                i['CGST'], 
                                                i['SGST'],
                                                i['IGST'],
                                                i['RoundOff'],
                                                i['Total']))
 
-        pipeline = [{ "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
-                                            "totals": { "$sum": "$Sales" },
+        pipeline = [{ "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
+                                            "totalp": { "$sum": "$Purchase" },
                                             "totalSGST":{"$sum":"$SGST" },
                                             "totalCGST":{ "$sum": "$CGST" }, 
                                             "totalIGST":{"$sum":"$IGST"}, 
@@ -5970,7 +6078,9 @@ class gstsad(ttk.Frame):
         result = self.collection.aggregate(pipeline)
         for j in result:
             self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
-                                        0,j['totals'], j['totalCGST'], j['totalSGST'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
         
     def click(self, event):
@@ -5984,6 +6094,8 @@ class gstsad(ttk.Frame):
             self.g_entry.delete(0, tk.END)
             self.Qty_entry.delete(0, tk.END)
             self.u_entry.delete(0, tk.END)
+            self.rc_entry.delete(0, tk.END)
+            self.ck_entry.delete(0, tk.END)
             self.pur_entry.delete(0, tk.END)
             self.SGST_entry.delete(0, tk.END)
             self.CGST_entry.delete(0, tk.END)
@@ -5998,13 +6110,14 @@ class gstsad(ttk.Frame):
             self.g_entry.insert(0, values[4])
             self.Qty_entry.insert(0, values[5])
             self.u_entry.insert(0, values[6])
-            self.pur_entry.insert(0, values[7])
-            self.CGST_entry.insert(0, values[8])
-            self.SGST_entry.insert(0, values[9])
-            self.IGST_entry.insert(0, values[10])
-            self.r_entry.insert(0, values[11])
-            self.t_entry.insert(0, values[12])
-
+            self.rc_entry.insert(0, values[7])
+            self.ck_entry.insert(0, values[8])
+            self.pur_entry.insert(0, values[9])
+            self.CGST_entry.insert(0, values[10])
+            self.SGST_entry.insert(0, values[11])
+            self.IGST_entry.insert(0, values[12])
+            self.r_entry.insert(0, values[13])
+            self.t_entry.insert(0, values[14])
 
     def add(self):
         try:
@@ -6014,6 +6127,8 @@ class gstsad(ttk.Frame):
             date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
             i = int(self.i_entry.get())
             qty = float(self.Qty_entry.get())
+            rc = float(self.rc_entry.get())
+            ck = float(self.ck_entry.get())
             u = self.u_entry.get()
             v = self.v_entry.get()
             g = self.g_entry.get()
@@ -6025,8 +6140,8 @@ class gstsad(ttk.Frame):
             r = float(self.r_entry.get())
             t = float(self.t_entry.get())
             data = {'Id':i,'Date':date, 'Party': p, 'VoucherNo':v,'GSTIN_UIN':g,
-                    'Qty':qty, 'Unit':u,
-                    'Sales':pur, "CGST":cgst, "SGST": sgst, "IGST":igst,
+                    'Qty':qty, 'Unit':u, 'RCN':rc, 'CKN':ck,
+                    'Purchase':pur, "CGST":cgst, "SGST": sgst, "IGST":igst,
                      'RoundOff':r, 'Total':t }
             
             self.collection.insert_one(data)
@@ -6043,6 +6158,8 @@ class gstsad(ttk.Frame):
         self.g_entry.delete(0, tk.END)
         self.Qty_entry.delete(0, tk.END)
         self.u_entry.delete(0, tk.END)
+        self.rc_entry.delete(0, tk.END)
+        self.ck_entry.delete(0, tk.END)
         self.pur_entry.delete(0, tk.END)
         self.SGST_entry.delete(0, tk.END)
         self.CGST_entry.delete(0, tk.END)
@@ -6056,6 +6173,8 @@ class gstsad(ttk.Frame):
         self.g_entry.insert(0, 0)
         self.Qty_entry.insert(0, 0)
         self.u_entry.insert(0, 0)
+        self.rc_entry.insert(0, 0)
+        self.ck_entry.insert(0, 0)
         self.pur_entry.insert(0, 0)
         self.CGST_entry.insert(0, 0)
         self.SGST_entry.insert(0, 0)
@@ -6074,15 +6193,17 @@ class gstsad(ttk.Frame):
         data = self.collection.find({"Date":{'$gte':fd, '$lte':td}}).sort("Date",1)
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"Date":{'$gte':fd, '$lte':td}}},\
-                    { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" }, 
-                                            "totals": { "$sum": "$Sales" },
+        pipeline = [{"$match":{"Date":{'$gte':fd, '$lte':td}}},
+            { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
+                                            "totalp": { "$sum": "$Purchase" },
                                             "totalSGST":{"$sum":"$SGST" },
                                             "totalCGST":{ "$sum": "$CGST" }, 
                                             "totalIGST":{"$sum":"$IGST"}, 
                                             "totalr":{"$sum":"$RoundOff"},
                                             "total":{"$sum":"$Total" }}}]
-        result =  self.collection.aggregate(pipeline)
+        result = self.collection.aggregate(pipeline)
 
         self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
         
@@ -6093,8 +6214,10 @@ class gstsad(ttk.Frame):
                                                i['VoucherNo'], 
                                                i['GSTIN_UIN'], 
                                                i['Qty'],
-                                               i['Unit'], 
-                                               i['Sales'], 
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
+                                               i['Purchase'], 
                                                i['CGST'], 
                                                i['SGST'],
                                                i['IGST'],
@@ -6103,7 +6226,53 @@ class gstsad(ttk.Frame):
         
         for j in result:
             self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
-                                        0,j['totals'], j['totalCGST'], j['totalSGST'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
+                                        j['totalIGST'], j['totalr'], j['total']), tags= 'total')
+
+    def search(self):
+        self.tree.delete(*self.tree.get_children())
+        party = self.p_entry.get()
+        data = self.collection.find({"Party":party}).sort("Date",1)
+        self.currnet_label.config(text="Showing Range")
+
+        pipeline = [{"$match":{"Party":party}},
+            { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
+                                            "totalrc": { "$sum": "$RCN" },
+                                            "totalck": { "$sum": "$CKN" },
+                                            "totalp": { "$sum": "$Purchase" },
+                                            "totalSGST":{"$sum":"$SGST" },
+                                            "totalCGST":{ "$sum": "$CGST" }, 
+                                            "totalIGST":{"$sum":"$IGST"}, 
+                                            "totalr":{"$sum":"$RoundOff"},
+                                            "total":{"$sum":"$Total" }}}]
+        result = self.collection.aggregate(pipeline)
+
+        self.tree.tag_configure('total',  background='#29B6F6', font=('Calibri', 12, 'bold'))
+        
+        for i in data:
+            self.tree.insert('', 'end',values=(i['Id'], 
+                                               i['Date'], 
+                                               i['Party'],
+                                               i['VoucherNo'], 
+                                               i['GSTIN_UIN'], 
+                                               i['Qty'],
+                                               i['Unit'],
+                                               i['RCN'],
+                                               i['CKN'], 
+                                               i['Purchase'], 
+                                               i['CGST'], 
+                                               i['SGST'],
+                                               i['IGST'],
+                                               i['RoundOff'],
+                                               i['Total']))
+        
+        for j in result:
+            self.tree.insert('', 'end',values=('Total',  0, 0, 0, 0, j['totalQty'],
+                                        0,j['totalrc'] ,j['totalck'],
+                                        j['totalp'], 
+                                        j['totalCGST'], j['totalSGST'],
                                         j['totalIGST'], j['totalr'], j['total']), tags= 'total')
 
     def update(self):
@@ -6113,6 +6282,8 @@ class gstsad(ttk.Frame):
         date = datetime.datetime.strptime(datestr, '%Y-%m-%d 00:00:00')
         i = int(self.i_entry.get())
         qty = float(self.Qty_entry.get())
+        rc = float(self.rc_entry.get())
+        ck = float(self.ck_entry.get())
         u = self.u_entry.get()
         v = self.v_entry.get()
         g = self.g_entry.get()
@@ -6123,13 +6294,10 @@ class gstsad(ttk.Frame):
         igst = float(self.IGST_entry.get())
         r = float(self.r_entry.get())
         t = float(self.t_entry.get())
-        self.collection.update_one({"Id": i}, {'$set':{'Id':i,
-                    'Date':date, 'Party': p, 
-                    'VoucherNo':v,'GSTIN_UIN':g,
-                    'Qty':qty, 'Unit':u,
-                    'Sales':pur, "CGST":cgst, 
-                    "SGST": sgst, "IGST":igst,
-                    'RoundOff':r, 'Total':t }}) 
+        self.collection.update_one({"Id": i}, {'$set':{'Id':i,'Date':date, 'Party': p, 'VoucherNo':v,'GSTIN_UIN':g,
+                    'Qty':qty, 'Unit':u, 'RCN':rc, 'CKN':ck,
+                    'Purchase':pur, "CGST":cgst, "SGST": sgst, "IGST":igst,
+                     'RoundOff':r, 'Total':t}}) 
         self.showall()  
 
     def delete(self):
