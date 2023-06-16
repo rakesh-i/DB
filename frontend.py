@@ -10,6 +10,7 @@ import pandas as pd
 from tkinter import filedialog
 import os
 from bson import ObjectId
+import re
 
 
 
@@ -67,7 +68,7 @@ class App:
         # Main Setup
         self.master = master
         self.style = ttk.Style('superhero')
-        self.master.title("Shri Shiddivinayaka Industries")
+        self.master.title("Sri Siddivinayaka Industries")
         self.master.geometry('1000x600')
         self.master.minsize(1000,600)
         os.popen("mongod")
@@ -221,7 +222,7 @@ class Sidebar(ttk.Frame):
                         db = client[dbname]
                         client.drop_database(dbname)
                         messagebox.showinfo("Deleted",f"{self.clist.get(index)} has been deleted")
-                        self.add_data()
+                        self.add_data1()
         except Exception as e:
             messagebox.showerror("Error", "Nothing is selected")
 
@@ -842,6 +843,8 @@ class Sidebar(ttk.Frame):
         col = db['Total']
         comp = [('Con', pymongo.ASCENDING)]
         col.create_index(comp, unique=True)
+        self.add_data1()
+        messagebox.showinfo("Success", f"{name} Database has been created")
 
     def search(self):
         string = self.search_entry.get()
@@ -858,6 +861,7 @@ class Sidebar(ttk.Frame):
     
     def search1(self):
         string = self.search_entry1.get()
+        string = "Con-"+string
         database_names = client.list_database_names()
         if string == "":
             return
@@ -6139,10 +6143,12 @@ class gstpsd(ttk.Frame):
     def search(self):
         self.tree.delete(*self.tree.get_children())
         party = self.p_entry.get()
-        data = self.collection.find({"Party":party}).sort("Date",1)
+        regex_pattern = re.compile(f'^{party}', re.IGNORECASE)
+        data = self.collection.find({"Party":{'$regex': regex_pattern}}).sort("Date",1)
         self.currnet_label.config(text="Showing Range")
+        
 
-        pipeline = [{"$match":{"Party":party}},
+        pipeline = [{"$match":{"Party":{"$regex":f'^{party}', '$options':'i'}}},
             { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
                                             "totalrc": { "$sum": "$RCN" },
                                             "totalck": { "$sum": "$CKN" },
@@ -6602,10 +6608,11 @@ class gstsad(ttk.Frame):
     def search(self):
         self.tree.delete(*self.tree.get_children())
         party = self.p_entry.get()
-        data = self.collection.find({"Party":party}).sort("Date",1)
+        regex_pattern = re.compile(f'^{party}', re.IGNORECASE)
+        data = self.collection.find({"Party":{'$regex': regex_pattern}}).sort("Date",1)
         self.currnet_label.config(text="Showing Range")
 
-        pipeline = [{"$match":{"Party":party}},
+        pipeline = [{"$match":{"Party":{"$regex":f'^{party}', '$options':'i'}}},
             { "$group": { "_id": None, "totalQty": { "$sum": "$Qty" },
                                             "totalrc": { "$sum": "$RCN" },
                                             "totalck": { "$sum": "$CKN" },
