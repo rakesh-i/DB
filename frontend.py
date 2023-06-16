@@ -169,8 +169,8 @@ class Sidebar(ttk.Frame):
             self.search_entry.configure(width=13)
             self.search_entry1.configure(width=13)
         else:
-            self.search_entry.configure(width=int(13+x/19))
-            self.search_entry1.configure(width=int(13+x/19))
+            self.search_entry.configure(width=int(16+x/19))
+            self.search_entry1.configure(width=int(16+x/19))
     
     def add_data(self):
         self.dblist.delete(0, 'end')
@@ -2320,7 +2320,7 @@ class hdr(ttk.Frame):
         self.tree.heading('Gbags', text='Gbags')
         self.tree.heading('GbagAmt', text='GbagAmt')
         self.tree.heading('Total', text='Total')
-        self.tree.place(x=0, rely=.50, relwidth=1, relheight=.55)
+        self.tree.place(x=0, rely=.55, relwidth=1, relheight=.45)
         self.tree.bind("<Double-1>", self.click)
         self.tree.update()
 
